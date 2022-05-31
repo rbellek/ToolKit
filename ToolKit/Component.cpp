@@ -66,10 +66,32 @@ namespace ToolKit
 
   void MeshComponent::Serialize(XmlDocument* doc, XmlNode* parent) const
   {
+    if (const MeshPtr& mesh = MeshC())
+    {
+      mesh->Save(true);
+      mesh->SerializeRef(doc, parent);
+    }
+
+    if (const MaterialPtr& mat = MaterialC())
+    {
+      mat->Save(true);
+      mat->SerializeRef(doc, parent);
+    }
   }
 
   void MeshComponent::DeSerialize(XmlDocument* doc, XmlNode* parent)
   {
+    XmlNode* resRef = parent->first_node(XmlResRefElement.c_str());
+    for (int i = 0; i < 2; i++)
+    {
+      if (resRef)
+      {
+        MeshPtr& mesh = Mesh();
+        String file = mesh->DeserializeRef(resRef);
+        mesh->SetFile(file);
+        resRef = resRef->next_sibling(XmlResRefElement.c_str());
+      }
+    }
   }
 
   ComponentPtr MeshComponent::Copy()

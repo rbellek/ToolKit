@@ -85,7 +85,7 @@ namespace ToolKit
 
   void Resource::SerializeRef(XmlDocument* doc, XmlNode* parent)
   {
-    XmlNode* refNode = CreateXmlNode(doc, "ResourceRef", parent);
+    XmlNode* refNode = CreateXmlNode(doc, XmlResRefElement, parent);
     WriteAttr
     (
       refNode, doc, "Type",
@@ -96,6 +96,13 @@ namespace ToolKit
     );
 
     WriteAttr(refNode, doc, "File", GetFile());
+  }
+
+  String Resource::DeserializeRef(XmlNode* refNode)
+  {
+    String val;
+    ReadAttr(refNode, XmlResRefElement, val);
+    return val;
   }
 
   String Resource::GetFile() const
