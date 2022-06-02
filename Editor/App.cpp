@@ -66,21 +66,21 @@ namespace ToolKit
       light->GetComponent<DirectionComponent>()->Yaw(glm::radians(180.0f));
       m_lightMaster->AddChild(light->m_node);
       m_sceneLights.push_back(light);
-      
+
       light = new DirectionalLight();
       light->Color() = Vec3(0.55f);
       light->GetComponent<DirectionComponent>()->Yaw(glm::radians(-20.0f));
       light->GetComponent<DirectionComponent>()->Pitch(glm::radians(-20.0f));
       m_lightMaster->AddChild(light->m_node);
       m_sceneLights.push_back(light);
-      
+
       light = new DirectionalLight();
       light->Color() = Vec3(0.15f);
       light->GetComponent<DirectionComponent>()->Yaw(glm::radians(90.0f));
       light->GetComponent<DirectionComponent>()->Pitch(glm::radians(-45.0f));
       m_lightMaster->AddChild(light->m_node);
       m_sceneLights.push_back(light);
-      
+
       light = new DirectionalLight();
       light->Color() = Vec3(0.1f);
       light->GetComponent<DirectionComponent>()->Yaw(glm::radians(120.0f));
