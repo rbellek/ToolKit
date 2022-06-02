@@ -1486,28 +1486,14 @@ Fail:
     void App::AssignManagerReporters()
     {
       // Register manager reporters
-      auto genericReporterFn = [](String msg) -> void
-      {
-        if (ConsoleWindow* console = g_app->GetConsole())
-        {
-          console->AddLog(msg);
-        }
-      };
-
-      auto genericTypedReportedFn = [](LogType logType, String msg) -> void
+      auto genericReporterFn = [](LogType logType, String msg) -> void
       {
         if (ConsoleWindow* console = g_app->GetConsole())
         {
           console->AddLog(msg, logType);
         }
       };
-
-      GetPluginManager()->m_reporterFn = genericReporterFn;
-      GetMeshManager()->m_reporterFn = genericReporterFn;
-      GetTextureManager()->m_reporterFn = genericReporterFn;
-      GetMaterialManager()->m_reporterFn = genericReporterFn;
-      GetSceneManager()->m_reporterFn = genericReporterFn;
-      GetLogger()->SetWriteConsoleFn(genericTypedReportedFn);
+      GetLogger()->SetWriteConsoleFn(genericReporterFn);
     }
 
     void App::CreateAndSetNewScene(const String& name)
