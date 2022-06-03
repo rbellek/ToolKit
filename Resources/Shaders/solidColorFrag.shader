@@ -118,9 +118,32 @@
 				}
 				else if (LightData.type[i] == 3) // Spot light
 				{
+					vec3 fragToLight = LightData.pos[i] - v_pos;
+
+					// No need calculation for the fragments outside of the light radius
+					float radiusCheck = clamp(LightData.radius[i] - length(fragToLight), 0.0, 1.0);
+					radiusCheck = ceil(radiusCheck);
+
 					vec3 l = -LightData.dir[i];
 
-					// Diffuse 
+					// Attenuation
+					float constant = 1.0;
+					float linear = 0.09;
+					float quadratic = 0.032;
+					float distance = length(fragToLight);
+					float attenuation = 1.0 /
+					(constant + linear * distance + quadratic * (distance * distance));
+
+					// Decrase attenuation heavily near radius
+					float cutOff = 0.5;
+					attenuation *= clamp
+					(
+						cutOff * distance + LightData.radius[i] * 0.5 - distance,
+						0.0,
+						1.0
+					);
+
+					// Diffuse
 					float diff = max(dot(n, l), 0.0);
 					diffuse = diff * LightData.color[i];
 
@@ -132,11 +155,11 @@
 
 					vec3 lightToFrag = normalize(v_pos -  LightData.pos[i]);
 					float theta = dot(lightToFrag, -l);
-					float epsilon = LightData.outAngle[i] - LightData.innAngle[i];
+					float epsilon =  LightData.innAngle[i] - LightData.outAngle[i];
 					float intensity = clamp((theta - LightData.outAngle[i]) / epsilon, 0.0, 1.0);
 
-					diffuse *= intensity;
-					specular *= intensity;
+					diffuse *= intensity * radiusCheck * attenuation;
+					specular *= intensity * radiusCheck * attenuation;
 				}
 
 				irradiance += (ambient + diffuse + specular) * LightData.intensity[i];

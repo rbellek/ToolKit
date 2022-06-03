@@ -940,13 +940,19 @@ namespace ToolKit
         Vec3 dir =
         currLight->GetComponent<DirectionComponent>()->GetDirection();
         float radius = static_cast<SpotLight*>(currLight)->Radius();
-        float outAngle = glm::radians
+        float outAngle = glm::cos
         (
-          static_cast<SpotLight*>(currLight)->OuterAngle()
+          glm::radians
+          (
+            static_cast<SpotLight*>(currLight)->OuterAngle() / 2.0f
+          )
         );
-        float innAngle = glm::radians
+        float innAngle = glm::cos
         (
-          static_cast<SpotLight*>(currLight)->InnerAngle()
+          glm::radians
+          (
+            static_cast<SpotLight*>(currLight)->InnerAngle() / 2.0f
+          )
         );
 
         GLuint loc = glGetUniformLocation
