@@ -215,6 +215,9 @@ namespace ToolKit
         }
       }
 
+      LightRawPtrArray gameLights = GetCurrentScene()->GetLights();
+      gameLights.insert(gameLights.end(), m_sceneLights.begin(), m_sceneLights.end());
+
       // Render Viewports.
       for (EditorViewport* viewport : viewports)
       {
@@ -236,7 +239,7 @@ namespace ToolKit
 
         if (viewport->IsVisible())
         {
-          m_renderer->RenderScene(GetCurrentScene(), viewport, m_sceneLights);
+          m_renderer->RenderScene(GetCurrentScene(), viewport, gameLights);
 
           Camera* cam = viewport->GetCamera();;
 

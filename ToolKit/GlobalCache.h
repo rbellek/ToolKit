@@ -56,6 +56,54 @@ namespace ToolKit
     "LightData.intensity[7]"
   };
 
+  static StringArray g_lightTypeStrCache =
+  {
+    "LightData.type[0]",
+    "LightData.type[1]",
+    "LightData.type[2]",
+    "LightData.type[3]",
+    "LightData.type[4]",
+    "LightData.type[5]",
+    "LightData.type[6]",
+    "LightData.type[7]"
+  };
+
+  static StringArray g_lightRadiusStrCache =
+  {
+    "LightData.radius[0]",
+    "LightData.radius[1]",
+    "LightData.radius[2]",
+    "LightData.radius[3]",
+    "LightData.radius[4]",
+    "LightData.radius[5]",
+    "LightData.radius[6]",
+    "LightData.radius[7]"
+  };
+
+  static StringArray g_lightOuterAngleStrCache =
+  {
+    "LightData.outAngle[0]",
+    "LightData.outAngle[1]",
+    "LightData.outAngle[2]",
+    "LightData.outAngle[3]",
+    "LightData.outAngle[4]",
+    "LightData.outAngle[5]",
+    "LightData.outAngle[6]",
+    "LightData.outAngle[7]"
+  };
+
+  static StringArray g_lightInnerAngleStrCache =
+  {
+    "LightData.innAngle[0]",
+    "LightData.innAngle[1]",
+    "LightData.innAngle[2]",
+    "LightData.innAngle[3]",
+    "LightData.innAngle[4]",
+    "LightData.innAngle[5]",
+    "LightData.innAngle[6]",
+    "LightData.innAngle[7]"
+  };
+
   static StringArray g_boneTransformStrCache =
   {
     "bones[0].transform",

@@ -32,7 +32,7 @@ namespace ToolKit
   (
     const ScenePtr& scene,
     Viewport* viewport,
-    DirectionalLightRawPtrArray editorLights
+    LightRawPtrArray editorLights
   )
   {
     Camera* cam = viewport->GetCamera();
@@ -98,7 +98,7 @@ namespace ToolKit
   (
     Entity* ntt,
     Camera* cam,
-    const DirectionalLightRawPtrArray& lights
+    const LightRawPtrArray& lights
   )
   {
     MeshComponentPtrArray meshComponents;
@@ -357,13 +357,13 @@ namespace ToolKit
       m_renderState.diffuseTexture = state->diffuseTexture;
       glBindTexture(GL_TEXTURE_2D, m_renderState.diffuseTexture);
     }
-
+    
     if (m_renderState.cubeMap != state->cubeMap && state->cubeMapInUse)
     {
       m_renderState.cubeMap = state->cubeMap;
       glBindTexture(GL_TEXTURE_CUBE_MAP, m_renderState.cubeMap);
     }
-
+    
     if (m_renderState.lineWidth != state->lineWidth)
     {
       m_renderState.lineWidth = state->lineWidth;
@@ -521,7 +521,7 @@ namespace ToolKit
     EntityRawPtrArray entities,
     Camera* cam,
     float zoom,
-    const DirectionalLightRawPtrArray& editorLights
+    const LightRawPtrArray& editorLights
   )
   {
     // Render opaque objects
@@ -545,7 +545,7 @@ namespace ToolKit
     EntityRawPtrArray entities,
     Camera* cam,
     float zoom,
-    const DirectionalLightRawPtrArray& editorLights
+    const LightRawPtrArray& editorLights
   )
   {
     // Sort transparent entities
@@ -740,49 +740,7 @@ namespace ToolKit
 
           assert(g_lightPosStrCache.size() >= lsize);
 
-          for (size_t i = 0; i < lsize; i++)
-          {
-            Vec3 pos = m_lights[i]->m_node->GetTranslation
-            (
-              TransformationSpace::TS_WORLD
-            );
-            Vec3 dir =
-            m_lights[i]->GetComponent<DirectionComponent>()->GetDirection();
-            Vec3 color = m_lights[i]->Color();
-            float intensity = m_lights[i]->Intensity();
-
-            GLint loc = glGetUniformLocation
-            (
-              program->m_handle,
-              g_lightPosStrCache[i].c_str()
-            );
-            glUniform3fv(loc, 1, &pos.x);
-            loc = glGetUniformLocation
-            (
-              program->m_handle,
-              g_lightDirStrCache[i].c_str()
-            );
-            glUniform3fv(loc, 1, &dir.x);
-            loc = glGetUniformLocation
-            (
-              program->m_handle,
-              g_lightColorStrCache[i].c_str()
-            );
-            glUniform3fv(loc, 1, &color.x);
-            loc = glGetUniformLocation
-            (
-              program->m_handle,
-              g_lightIntensityStrCache[i].c_str()
-            );
-            glUniform1f(loc, intensity);
-          }
-
-          GLint loc = glGetUniformLocation
-          (
-            program->m_handle,
-            "LightData.activeCount"
-          );
-          glUniform1i(loc, static_cast<int>(m_lights.size()));
+          FeedLightUniforms(program, m_lights);
         }
         break;
         case Uniform::CAM_DATA:
@@ -885,6 +843,169 @@ namespace ToolKit
         }
       }
     }
+  }
+
+  void Renderer::FeedLightUniforms(ProgramPtr program, LightRawPtrArray lights)
+  {
+    for (size_t i = 0; i < m_lights.size(); i++)
+    {
+      Light* currLight = m_lights[i];
+
+      LightType type = currLight->GetLightType();
+
+      // Point light uniforms
+      if (type == LightType::LightPoint)
+      {
+        Vec3 color = currLight->Color();
+        float intensity = currLight->Intensity();
+        Vec3 pos = currLight->m_node->GetTranslation
+        (
+          TransformationSpace::TS_WORLD
+        );
+        float radius = static_cast<PointLight*>(currLight)->Radius();
+
+        GLuint loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightTypeStrCache[i].c_str()
+        );
+        glUniform1i(loc, static_cast<GLuint>(type));
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightColorStrCache[i].c_str()
+        );
+        glUniform3fv(loc, 1, &color.x);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightIntensityStrCache[i].c_str()
+        );
+        glUniform1f(loc, intensity);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightPosStrCache[i].c_str()
+        );
+        glUniform3fv(loc, 1, &pos.x);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightRadiusStrCache[i].c_str()
+        );
+        glUniform1f(loc, radius);
+      }
+      // Directional light uniforms
+      else if (type == LightType::LightDirectional)
+      {
+        Vec3 color = currLight->Color();
+        float intensity = currLight->Intensity();
+        Vec3 dir =
+        currLight->GetComponent<DirectionComponent>()->GetDirection();
+
+        GLuint loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightTypeStrCache[i].c_str()
+        );
+        glUniform1i(loc, static_cast<GLuint>(type));
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightColorStrCache[i].c_str()
+        );
+        glUniform3fv(loc, 1, &color.x);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightIntensityStrCache[i].c_str()
+        );
+        glUniform1f(loc, intensity);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightDirStrCache[i].c_str()
+        );
+        glUniform3fv(loc, 1, &dir.x);
+      }
+      // Spot light uniforms
+      else if (type == LightType::LightSpot)
+      {
+        Vec3 color = currLight->Color();
+        float intensity = currLight->Intensity();
+        Vec3 pos = currLight->m_node->GetTranslation
+        (
+          TransformationSpace::TS_WORLD
+        );
+        Vec3 dir =
+        currLight->GetComponent<DirectionComponent>()->GetDirection();
+        float radius = static_cast<SpotLight*>(currLight)->Radius();
+        float outAngle = glm::radians
+        (
+          static_cast<SpotLight*>(currLight)->OuterAngle()
+        );
+        float innAngle = glm::radians
+        (
+          static_cast<SpotLight*>(currLight)->InnerAngle()
+        );
+
+        GLuint loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightTypeStrCache[i].c_str()
+        );
+        glUniform1i(loc, static_cast<GLuint>(type));
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightColorStrCache[i].c_str()
+        );
+        glUniform3fv(loc, 1, &color.x);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightIntensityStrCache[i].c_str()
+        );
+        glUniform1f(loc, intensity);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightPosStrCache[i].c_str()
+        );
+        glUniform3fv(loc, 1, &pos.x);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightDirStrCache[i].c_str()
+        );
+        glUniform3fv(loc, 1, &dir.x);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightRadiusStrCache[i].c_str()
+        );
+        glUniform1f(loc, radius);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightOuterAngleStrCache[i].c_str()
+        );
+        glUniform1f(loc, outAngle);
+        loc = glGetUniformLocation
+        (
+          program->m_handle,
+          g_lightInnerAngleStrCache[i].c_str()
+        );
+        glUniform1f(loc, innAngle);
+      }
+    }
+
+    GLint loc = glGetUniformLocation
+    (
+      program->m_handle,
+      "LightData.activeCount"
+    );
+    glUniform1i(loc, static_cast<int>(m_lights.size()));
   }
 
   void Renderer::SetVertexLayout(VertexLayout layout)
