@@ -79,9 +79,12 @@ namespace ToolKit
      */
     void DeSerialize(XmlDocument* doc, XmlNode* parent) override;
 
+    static Component* CreateByType(ComponentType t);
+
    public:
     ULongID m_id;  //!< Unique id of the component for the current runtime.
     ParameterBlock m_localData;  //!< Component local data.
+    Entity* m_entity = nullptr;
   };
 
   typedef std::shared_ptr<class MeshComponent> MeshComponentPtr;
@@ -90,14 +93,6 @@ namespace ToolKit
   {
     "Mesh Component",
     90
-  };
-
-  typedef std::shared_ptr<class DirectionComponent> DirectionComponentPtr;
-
-  static VariantCategory DirectionComponentCategory
-  {
-    "Direction Component",
-    10
   };
 
   class TK_API MeshComponent : public Component
@@ -148,13 +143,21 @@ namespace ToolKit
     TKDeclareParam(MaterialPtr, Material);
   };
 
+  typedef std::shared_ptr<class DirectionComponent> DirectionComponentPtr;
+
+  static VariantCategory DirectionComponentCategory
+  {
+    "Direction Component",
+    10
+  };
+
   class TK_API DirectionComponent: public Component
   {
    public:
     TKComponentType(DirectionComponent);
 
+    DirectionComponent();
     explicit DirectionComponent(Entity* entity);
-
     virtual ~DirectionComponent();
 
     ComponentPtr Copy() override;
@@ -168,12 +171,6 @@ namespace ToolKit
     Vec3 GetUp() const;
     Vec3 GetRight() const;
     void LookAt(Vec3 target);
-
-   public:
-     Entity* m_entity = nullptr;
-
-   private:
-     DirectionComponent();
   };
 
 }  // namespace ToolKit

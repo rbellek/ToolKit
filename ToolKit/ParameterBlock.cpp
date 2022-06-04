@@ -231,23 +231,6 @@ namespace ToolKit
     WriteAttr(node, doc, "exposed", std::to_string(m_exposed));
     WriteAttr(node, doc, "editable", std::to_string(m_editable));
 
-    // refRes is used to serialize resource references.
-    ResourcePtr refRes = nullptr;
-    if (m_type == VariantType::MeshPtr)
-    {
-      refRes = std::static_pointer_cast<Resource>
-      (
-        GetCVar<MeshPtr>()
-      );
-    }
-    else if (m_type == VariantType::MaterialPtr)
-    {
-      refRes = std::static_pointer_cast<Resource>
-      (
-        GetCVar<MaterialPtr>()
-      );
-    }
-
     // Serialize data.
     switch (m_type)
     {
@@ -362,11 +345,20 @@ namespace ToolKit
       );
       break;
       case VariantType::MeshPtr:
+      {
+        MeshPtr res = GetCVar<MeshPtr>();
+        if (res && !res->IsDynamic())
+        {
+          res->SerializeRef(doc, node);
+        }
+      }
+      break;
       case VariantType::MaterialPtr:
       {
-        if (refRes && !refRes->IsDynamic())
+        MaterialPtr res = GetCVar<MaterialPtr>();
+        if (res && !res->IsDynamic())
         {
-          refRes->SerializeRef(doc, node);
+          res->SerializeRef(doc, node);
         }
       }
       break;
@@ -492,6 +484,32 @@ namespace ToolKit
         ULongID val(0);
         ReadAttr(parent, XmlParamterValAttr, val);
         m_var = val;
+      }
+      break;
+      case VariantType::MeshPtr:
+      {
+        String file = Resource::DeserializeRef(parent);
+        if (file.empty())
+        {
+          m_var = std::make_shared<Mesh>();
+        }
+        else
+        {
+          m_var = GetMeshManager()->Create<Mesh>(file);
+        }
+      }
+      break;
+      case VariantType::MaterialPtr:
+      {
+        String file = Resource::DeserializeRef(parent);
+        if (file.empty())
+        {
+          m_var = std::make_shared<Material>();
+        }
+        else
+        {
+          m_var = GetMaterialManager()->Create<Material>(file);
+        }
       }
       break;
       default:

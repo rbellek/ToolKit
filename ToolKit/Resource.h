@@ -53,10 +53,10 @@ namespace ToolKit
 
     /**
     * Extracts the File attribute from the ResourceRef Xml Node.
-    * @param refNode Reference node to extract file.
+    * @param parent Parent xml node that contains reference node.
     * @returns File path to the resource to be referenced.
     */
-    String DeserializeRef(XmlNode* refNode);
+    static String DeserializeRef(XmlNode* parent);
 
     String GetFile() const;
     /**

@@ -37,6 +37,7 @@ namespace ToolKit
 
   void Light::DeSerialize(XmlDocument* doc, XmlNode* parent)
   {
+    ClearComponents(); // Read from file.
     Entity::DeSerialize(doc, parent);
   }
 

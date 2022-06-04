@@ -1026,10 +1026,13 @@ Fail:
     void App::ApplyProjectSettings(bool setDefaults)
     {
       if
+      (
+        CheckFile
         (
-        CheckFile(ConcatPaths({ ResourcePath(), "Editor.settings" }))
-        && !setDefaults
+          ConcatPaths({ ResourcePath(), "Editor.settings" })
         )
+        && !setDefaults
+      )
       {
         DeSerialize(nullptr, nullptr);
 
@@ -1091,10 +1094,10 @@ Fail:
       for (Window* wnd : m_windows)
       {
         if
-          (
+        (
           wnd->GetType() != Window::Type::Viewport &&
           wnd->GetType() != Window::Type::Viewport2d
-          )
+        )
         {
           continue;
         }

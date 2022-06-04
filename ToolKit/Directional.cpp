@@ -9,6 +9,9 @@ namespace ToolKit
   {
     DeSerialize(nullptr, node);
 
+    DirectionComponentPtr dCom = GetComponent<DirectionComponent>();
+    dCom->m_entity = this;
+
     if (m_ortographic)
     {
       SetLens(m_left, m_right, m_bottom, m_top, m_near, m_far);
@@ -17,14 +20,11 @@ namespace ToolKit
     {
       SetLens(m_fov, m_aspect * m_height, m_height);
     }
-
-    AddComponent(new DirectionComponent(this));
   }
 
   Camera::Camera()
   {
     SetLens(glm::radians(90.0f), 640.0f, 480.0f, 0.01f, 1000.0f);
-
     AddComponent(new DirectionComponent(this));
   }
 
@@ -178,4 +178,5 @@ namespace ToolKit
 
     return cpy;
   }
+
 }  // namespace ToolKit

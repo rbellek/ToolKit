@@ -35,6 +35,12 @@ namespace ToolKit
     Entity_Button
   };
 
+  static VariantCategory EntityCategory
+  {
+    "Meta",
+    100
+  };
+
   class TK_API Entity : public Serializable
   {
    public:
@@ -86,6 +92,11 @@ namespace ToolKit
     }
 
     ComponentPtr GetComponent(ULongID id) const;
+    
+    /**
+    * Removes all components from the entity.
+    */
+    void ClearComponents();
 
    protected:
     virtual Entity* CopyTo(Entity* other) const;
@@ -123,4 +134,3 @@ namespace ToolKit
   };
 
 }  // namespace ToolKit
-

@@ -105,10 +105,13 @@ namespace ToolKit
     WriteAttr(refNode, doc, "File", file);
   }
 
-  String Resource::DeserializeRef(XmlNode* refNode)
+  String Resource::DeserializeRef(XmlNode* parent)
   {
     String val;
-    ReadAttr(refNode, XmlResRefElement, val);
+    if (XmlNode* refNode = parent->first_node(XmlResRefElement.c_str()))
+    {
+      ReadAttr(refNode, "File", val);
+    }
     return val;
   }
 
