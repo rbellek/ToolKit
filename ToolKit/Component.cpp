@@ -114,6 +114,14 @@ namespace ToolKit
     }
   }
 
+  void MeshComponent::Serialize(XmlDocument* doc, XmlNode* parent) const
+  {
+    if (!MeshC()->IsDynamic())
+    {
+      Component::Serialize(doc, parent);
+    }
+  }
+
   DirectionComponent::DirectionComponent()
   {
   }

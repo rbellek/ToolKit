@@ -132,6 +132,13 @@ namespace ToolKit
      */
     void Init(bool flushClientSideArray);
 
+    /**
+    * Overrides default serialization to avoid saving dynamically created
+    * resources. Because dynamic resources are created from scratch
+    * in every runtime.
+    */
+    void Serialize(XmlDocument* doc, XmlNode* parent) const override;
+
    public:
     TKDeclareParam(MeshPtr, Mesh);  //!< Component's Mesh resource.
 
