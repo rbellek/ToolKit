@@ -111,6 +111,7 @@ namespace ToolKit
     if (XmlNode* refNode = parent->first_node(XmlResRefElement.c_str()))
     {
       ReadAttr(refNode, "File", val);
+      NormalizePath(val);
     }
     return val;
   }

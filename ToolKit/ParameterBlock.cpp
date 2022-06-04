@@ -495,6 +495,7 @@ namespace ToolKit
         }
         else
         {
+          file = MeshPath(file);
           m_var = GetMeshManager()->Create<Mesh>(file);
         }
       }
@@ -508,6 +509,7 @@ namespace ToolKit
         }
         else
         {
+          file = MaterialPath(file);
           m_var = GetMaterialManager()->Create<Material>(file);
         }
       }
