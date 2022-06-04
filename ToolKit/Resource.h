@@ -67,6 +67,13 @@ namespace ToolKit
     const String& GetSerializeFile();
     void SetFile(const String& file);
 
+    /**
+    * A resource is considered to be dynamic if it does not have a file.
+    * This states that the object has been created on the runtime.
+    * @returns Returns true if resource does not have a file path.
+    */
+    bool IsDynamic();
+
    protected:
     virtual void CopyTo(Resource* other);
 

@@ -119,17 +119,6 @@ namespace ToolKit
     virtual ~MeshComponent();
 
     /**
-     * Serializes the MeshComponent to the xml document. If parent is not null
-     * appends this component to the parent node.
-     */
-    void Serialize(XmlDocument* doc, XmlNode* parent) const override;
-
-    /**
-     * De serialize the MeshComponent from given xml node and document.
-     */
-    void DeSerialize(XmlDocument* doc, XmlNode* parent) override;
-
-    /**
      * Creates a copy of the MeshComponent. Contained Mesh does not get
      * copied but referenced. However Material is copied and will be serialized
      * to the scene if the containing Entity gets serialized.

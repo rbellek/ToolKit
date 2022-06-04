@@ -231,6 +231,24 @@ namespace ToolKit
     WriteAttr(node, doc, "exposed", std::to_string(m_exposed));
     WriteAttr(node, doc, "editable", std::to_string(m_editable));
 
+    // refRes is used to serialize resource references.
+    ResourcePtr refRes = nullptr;
+    if (m_type == VariantType::MeshPtr)
+    {
+      refRes = std::static_pointer_cast<Resource>
+      (
+        GetCVar<MeshPtr>()
+      );
+    }
+    else if (m_type == VariantType::MaterialPtr)
+    {
+      refRes = std::static_pointer_cast<Resource>
+      (
+        GetCVar<MaterialPtr>()
+      );
+    }
+
+    // Serialize data.
     switch (m_type)
     {
       case VariantType::Bool:
@@ -346,14 +364,9 @@ namespace ToolKit
       case VariantType::MeshPtr:
       case VariantType::MaterialPtr:
       {
-        ResourcePtr resPtr = std::static_pointer_cast<Resource>
-        (
-          GetCVar<MeshPtr>()
-        );
-
-        if (resPtr)
+        if (refRes && !refRes->IsDynamic())
         {
-          resPtr->SerializeRef(doc, node);
+          refRes->SerializeRef(doc, node);
         }
       }
       break;
