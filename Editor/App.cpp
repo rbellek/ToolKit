@@ -215,8 +215,28 @@ namespace ToolKit
         }
       }
 
+      // Take all lights in an array
       LightRawPtrArray gameLights = GetCurrentScene()->GetLights();
-      gameLights.insert(gameLights.end(), m_sceneLights.begin(), m_sceneLights.end());
+      gameLights.insert
+      (
+        gameLights.end(),
+        m_sceneLights.begin(),
+        m_sceneLights.end()
+      );
+      // Sort lights by type
+      auto lightSortFn = [](Light* light1, Light* light2) -> bool
+      {
+        return
+        (
+          light1->GetLightType() == LightType::LightDirectional
+          &&
+          (
+            light2->GetLightType() == LightType::LightSpot
+            || light2->GetLightType() == LightType::LightPoint
+          )
+        );
+      };
+      std::stable_sort(gameLights.begin(), gameLights.end(), lightSortFn);
 
       // Render Viewports.
       for (EditorViewport* viewport : viewports)

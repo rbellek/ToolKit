@@ -17,14 +17,14 @@
 				2 : Directional light
 				3 : Spot light
 			*/
-			int type[8];
-			vec3 pos[8];
-			vec3 dir[8];
-			vec3 color[8];
-			float intensity[8];
-			float radius[8];
-			float outAngle[8];
-			float innAngle[8];
+			int type[12];
+			vec3 pos[12];
+			vec3 dir[12];
+			vec3 color[12];
+			float intensity[12];
+			float radius[12];
+			float outAngle[12];
+			float innAngle[12];
 			int activeCount;
 		};
 

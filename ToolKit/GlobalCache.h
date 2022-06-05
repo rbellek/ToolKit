@@ -18,6 +18,10 @@ namespace ToolKit
     "LightData.pos[5]",
     "LightData.pos[6]",
     "LightData.pos[7]",
+    "LightData.pos[8]",
+    "LightData.pos[9]",
+    "LightData.pos[10]",
+    "LightData.pos[11]"
   };
 
   static StringArray g_lightDirStrCache =
@@ -29,7 +33,11 @@ namespace ToolKit
     "LightData.dir[4]",
     "LightData.dir[5]",
     "LightData.dir[6]",
-    "LightData.dir[7]"
+    "LightData.dir[7]",
+    "LightData.dir[8]",
+    "LightData.dir[9]",
+    "LightData.dir[10]",
+    "LightData.dir[11]"
   };
 
   static StringArray g_lightColorStrCache =
@@ -41,7 +49,11 @@ namespace ToolKit
     "LightData.color[4]",
     "LightData.color[5]",
     "LightData.color[6]",
-    "LightData.color[7]"
+    "LightData.color[7]",
+    "LightData.color[8]",
+    "LightData.color[9]",
+    "LightData.color[10]",
+    "LightData.color[11]"
   };
 
   static StringArray g_lightIntensityStrCache =
@@ -53,7 +65,11 @@ namespace ToolKit
     "LightData.intensity[4]",
     "LightData.intensity[5]",
     "LightData.intensity[6]",
-    "LightData.intensity[7]"
+    "LightData.intensity[7]",
+    "LightData.intensity[8]",
+    "LightData.intensity[9]",
+    "LightData.intensity[10]",
+    "LightData.intensity[11]"
   };
 
   static StringArray g_lightTypeStrCache =
@@ -65,7 +81,11 @@ namespace ToolKit
     "LightData.type[4]",
     "LightData.type[5]",
     "LightData.type[6]",
-    "LightData.type[7]"
+    "LightData.type[7]",
+    "LightData.type[8]",
+    "LightData.type[9]",
+    "LightData.type[10]",
+    "LightData.type[11]"
   };
 
   static StringArray g_lightRadiusStrCache =
@@ -77,7 +97,11 @@ namespace ToolKit
     "LightData.radius[4]",
     "LightData.radius[5]",
     "LightData.radius[6]",
-    "LightData.radius[7]"
+    "LightData.radius[7]",
+    "LightData.radius[8]",
+    "LightData.radius[9]",
+    "LightData.radius[10]",
+    "LightData.radius[11]"
   };
 
   static StringArray g_lightOuterAngleStrCache =
@@ -89,7 +113,11 @@ namespace ToolKit
     "LightData.outAngle[4]",
     "LightData.outAngle[5]",
     "LightData.outAngle[6]",
-    "LightData.outAngle[7]"
+    "LightData.outAngle[7]",
+    "LightData.outAngle[8]",
+    "LightData.outAngle[9]",
+    "LightData.outAngle[10]",
+    "LightData.outAngle[11]"
   };
 
   static StringArray g_lightInnerAngleStrCache =
@@ -101,7 +129,11 @@ namespace ToolKit
     "LightData.innAngle[4]",
     "LightData.innAngle[5]",
     "LightData.innAngle[6]",
-    "LightData.innAngle[7]"
+    "LightData.innAngle[7]",
+    "LightData.innAngle[8]",
+    "LightData.innAngle[9]",
+    "LightData.innAngle[10]",
+    "LightData.innAngle[11]"
   };
 
   static StringArray g_boneTransformStrCache =

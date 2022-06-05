@@ -119,7 +119,7 @@ namespace ToolKit
       mesh->GetAllMeshes(meshCollector);
 
       m_cam = cam;
-      m_lights = lights;
+      m_lights = GetBestLights(ntt, lights);
       SetProjectViewModel(ntt, cam);
 
       for (Mesh* mesh : meshCollector)
@@ -357,13 +357,13 @@ namespace ToolKit
       m_renderState.diffuseTexture = state->diffuseTexture;
       glBindTexture(GL_TEXTURE_2D, m_renderState.diffuseTexture);
     }
-    
+
     if (m_renderState.cubeMap != state->cubeMap && state->cubeMapInUse)
     {
       m_renderState.cubeMap = state->cubeMap;
       glBindTexture(GL_TEXTURE_CUBE_MAP, m_renderState.cubeMap);
     }
-    
+
     if (m_renderState.lineWidth != state->lineWidth)
     {
       m_renderState.lineWidth = state->lineWidth;
@@ -625,6 +625,69 @@ namespace ToolKit
     }
   }
 
+  LightRawPtrArray Renderer::GetBestLights
+  (
+    Entity* entity,
+    const LightRawPtrArray& lights
+  )
+  {
+    LightRawPtrArray bestLights;
+    LightRawPtrArray outsideRadiusLights;
+    bestLights.reserve(lights.size());
+
+    // Find the end of directional lights
+    for (int i = 0; i < lights.size(); i++)
+    {
+      if(lights[i]->GetLightType() == LightType::LightDirectional)
+      {
+        bestLights.push_back(lights[i]);
+      }
+    }
+
+    // Add the lights inside of the radius first
+    for (int i = 0; i < lights.size(); i++)
+    {
+      {
+        float radius;
+        if (lights[i]->GetLightType() == LightType::LightPoint)
+        {
+          radius = static_cast<PointLight*>(lights[i])->Radius();
+        }
+        else if (lights[i]->GetLightType() == LightType::LightSpot)
+        {
+          radius = static_cast<SpotLight*>(lights[i])->Radius();
+        }
+        else
+        {
+          continue;
+        }
+
+        float distance = glm::length2
+        (
+          entity->m_node->GetTranslation(TransformationSpace::TS_WORLD) -
+          lights[i]->m_node->GetTranslation(TransformationSpace::TS_WORLD)
+        );
+
+        if (distance < radius * radius)
+        {
+          bestLights.push_back(lights[i]);
+        }
+        else
+        {
+          outsideRadiusLights.push_back(lights[i]);
+        }
+      }
+    }
+    bestLights.insert
+    (
+      bestLights.end(),
+      outsideRadiusLights.begin(),
+      outsideRadiusLights.end()
+    );
+
+    return bestLights;
+  }
+
   void Renderer::SetProjectViewModel(Entity* ntt, Camera* cam)
   {
     m_view = cam->GetViewMatrix();
@@ -732,15 +795,12 @@ namespace ToolKit
         break;
         case Uniform::LIGHT_DATA:
         {
-          size_t lsize = m_lights.size();
-          if (lsize == 0)
+          if (m_lights.size() == 0)
           {
             break;
           }
 
-          assert(g_lightPosStrCache.size() >= lsize);
-
-          FeedLightUniforms(program, m_lights);
+          FeedLightUniforms(program);
         }
         break;
         case Uniform::CAM_DATA:
@@ -845,9 +905,10 @@ namespace ToolKit
     }
   }
 
-  void Renderer::FeedLightUniforms(ProgramPtr program, LightRawPtrArray lights)
+  void Renderer::FeedLightUniforms(ProgramPtr program)
   {
-    for (size_t i = 0; i < m_lights.size(); i++)
+    size_t size = glm::min(m_lights.size(), m_maxLightsPerObject);
+    for (size_t i = 0; i < size; i++)
     {
       Light* currLight = m_lights[i];
 
