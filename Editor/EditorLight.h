@@ -14,8 +14,6 @@ namespace ToolKit
 {
   namespace Editor
   {
-    class DirectionalLightGimzo;
-    class SpotLightGizmo;
 
     class EditorDirectionalLight : public DirectionalLight
     {
@@ -67,5 +65,6 @@ namespace ToolKit
      private:
       SpotLightGizmo* m_gizmo = nullptr;
     };
+
   }  // namespace Editor
 }  // namespace ToolKit
