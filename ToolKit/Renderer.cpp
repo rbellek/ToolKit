@@ -1,4 +1,7 @@
 #include "Renderer.h"
+
+#include <algorithm>
+
 #include "Mesh.h"
 #include "Drawable.h"
 #include "Texture.h"

@@ -274,4 +274,4 @@ namespace ToolKit
     "bones[64].bindPose"
   };
 
-}
+}  // namespace ToolKit
