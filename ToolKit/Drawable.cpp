@@ -76,6 +76,7 @@ namespace ToolKit
 
   void Drawable::DeSerialize(XmlDocument* doc, XmlNode* parent)
   {
+    ClearComponents();
     Entity::DeSerialize(doc, parent);
   }
 
