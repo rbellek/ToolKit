@@ -5,6 +5,7 @@
 
 namespace ToolKit
 {
+
   Camera::Camera(XmlNode* node)
   {
     DeSerialize(nullptr, node);
@@ -127,8 +128,7 @@ namespace ToolKit
     Entity::Serialize(doc, parent);
     parent = parent->last_node();
 
-    XmlNode* node = doc->allocate_node(rapidxml::node_element, "Camera");
-    parent->append_node(node);
+    XmlNode* node = CreateXmlNode(doc, "Camera", parent);
 
     WriteAttr(node, doc, "fov", std::to_string(m_fov));
     WriteAttr(node, doc, "aspect", std::to_string(m_aspect));
@@ -144,6 +144,7 @@ namespace ToolKit
 
   void Camera::DeSerialize(XmlDocument* doc, XmlNode* parent)
   {
+    ClearComponents();
     Entity::DeSerialize(doc, parent);
     if (XmlNode* node = parent->first_node("Camera"))
     {
