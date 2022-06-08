@@ -175,6 +175,7 @@ namespace ToolKit
     cpy->m_bottom = m_bottom;
     cpy->m_ortographic = m_ortographic;
     cpy->m_projection = m_projection;
+    cpy->ClearComponents();
     cpy->AddComponent(new DirectionComponent(cpy));
 
     return cpy;

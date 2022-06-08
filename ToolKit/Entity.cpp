@@ -246,6 +246,18 @@ namespace ToolKit
     m_components.push_back(ComponentPtr(component));
   }
 
+  void Entity::RemoveComponent(ULongID componentId)
+  {
+    for (size_t i = 0; i < m_components.size(); i++)
+    {
+      if (m_components[i]->m_id == componentId)
+      {
+        m_components.erase(m_components.begin() + i);
+        return;
+      }
+    }
+  }
+
   ComponentPtr Entity::GetComponent(ULongID id) const
   {
     for (const ComponentPtr& com : m_components)

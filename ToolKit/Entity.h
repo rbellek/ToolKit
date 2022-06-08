@@ -64,6 +64,12 @@ namespace ToolKit
 
     // Component functionalities.
     void AddComponent(Component* component);
+    
+    /**
+    * Remove the given component from the m_components.
+    * @param componentId Id of the component tobe removed.
+    */
+    void RemoveComponent(ULongID componentId);
 
     template<typename T>
     std::shared_ptr<T> GetComponent() const
