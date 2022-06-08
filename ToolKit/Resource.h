@@ -41,7 +41,7 @@ namespace ToolKit
     virtual ResourceType GetType() const;
     virtual void Serialize(XmlDocument* doc, XmlNode* parent) const;
     virtual void DeSerialize(XmlDocument* doc, XmlNode* parent);
-    
+
     /**
     * Outputs file path and the resource type to an xml node. Xml node name is
     * ResourceRef and xml node has Type attribute for resource type enum and

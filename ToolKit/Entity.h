@@ -64,7 +64,7 @@ namespace ToolKit
 
     // Component functionalities.
     void AddComponent(Component* component);
-    
+
     /**
     * Remove the given component from the m_components.
     * @param componentId Id of the component tobe removed.
@@ -98,7 +98,7 @@ namespace ToolKit
     }
 
     ComponentPtr GetComponent(ULongID id) const;
-    
+
     /**
     * Removes all components from the entity.
     */

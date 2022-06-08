@@ -1,4 +1,7 @@
 #include "ParameterBlock.h"
+
+#include <memory>
+
 #include "Util.h"
 #include "Mesh.h"
 #include "ToolKit.h"

@@ -296,7 +296,7 @@ namespace ToolKit
 
     m_node->Serialize(doc, node);
     m_localData.Serialize(doc, node);
-    
+
     XmlNode* compNode = CreateXmlNode(doc, "Components", node);
     for (const ComponentPtr& cmp : m_components)
     {
@@ -324,7 +324,7 @@ namespace ToolKit
     }
 
     m_localData.DeSerialize(doc, parent);
-    
+
     if (XmlNode* components = node->first_node("Components"))
     {
       XmlNode* comNode = components->first_node(XmlComponent.c_str());
