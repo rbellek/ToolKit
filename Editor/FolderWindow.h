@@ -76,7 +76,7 @@ namespace ToolKit
       virtual ~FolderWindow();
       virtual void Show() override;
       virtual Type GetType() const override;
-      void Iterate(const String& path, bool clear);
+      void Iterate(const String& path, bool clear, bool addEngine = true);
       void UpdateContent();
       void AddEntry(const FolderView& view);
       FolderView& GetView(int indx);
@@ -99,8 +99,8 @@ namespace ToolKit
       std::unordered_map<String, ViewSettings> m_viewSettings;
       std::vector<FolderView> m_entiries;
       int m_activeFolder = -1;
+      bool m_activeEngineFolder = false;
       bool m_showStructure = true;
     };
-
   }
 }
