@@ -112,7 +112,6 @@ namespace ToolKit
       std::unordered_map<String, ViewSettings> m_viewSettings;
       std::vector<FolderView> m_entiries;
       int m_activeFolder = -1;
-      bool m_activeEngineFolder = false;
       bool m_showStructure = true;
     };
   }  // namespace Editor

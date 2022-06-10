@@ -1041,7 +1041,7 @@ namespace ToolKit
           {
             String root = path.substr(0, lastSep);
             String end = path.substr(lastSep, path.size());
-            String test = String(1, GetPathSeparator()) + String("Engine");
+            static String test = String(1, GetPathSeparator()) + String("Engine");
             return root == ResourcePath() || !end.compare(test);
           }
 
@@ -1185,8 +1185,6 @@ namespace ToolKit
         m_entiries.clear();
       }
 
-      static bool engineIterated = false;
-
       for
       (
         const std::filesystem::directory_entry& e :
@@ -1217,26 +1215,24 @@ namespace ToolKit
         }
       }
 
-      if (!addEngine)
+      if (addEngine)
       {
-        return;
+        // Engine folder
+        FolderView view(this);
+        view.SetPath(DefaultAbsolutePath());
+
+        if (m_viewSettings.find(path) != m_viewSettings.end())
+        {
+          ViewSettings vs = m_viewSettings[path];
+          view.m_iconSize = vs.size;
+          view.m_visible = vs.visible;
+          view.m_activateNext = vs.active;
+        }
+
+        view.Iterate();
+        m_entiries.push_back(view);
+        Iterate(view.GetPath(), false, false);
       }
-
-      // Engine folder
-      FolderView view(this);
-      view.SetPath(DefaultAbsolutePath());
-
-      if (m_viewSettings.find(path) != m_viewSettings.end())
-      {
-        ViewSettings vs = m_viewSettings[path];
-        view.m_iconSize = vs.size;
-        view.m_visible = vs.visible;
-        view.m_activateNext = vs.active;
-      }
-
-      view.Iterate();
-      m_entiries.push_back(view);
-      Iterate(view.GetPath(), false, false);
     }
 
     void FolderWindow::UpdateContent()
