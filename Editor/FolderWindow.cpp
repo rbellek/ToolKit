@@ -1041,7 +1041,8 @@ namespace ToolKit
           {
             String root = path.substr(0, lastSep);
             String end = path.substr(lastSep, path.size());
-            static String test = String(1, GetPathSeparator()) + String("Engine");
+            static String test = String(1, GetPathSeparator())
+            + String("Engine");
             return root == ResourcePath() || !end.compare(test);
           }
 
