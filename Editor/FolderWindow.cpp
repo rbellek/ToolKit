@@ -433,9 +433,7 @@ namespace ToolKit
               );
               if
               (
-                // Engine folder is readonly
-                !(m_path.find("Engine") != String::npos)
-                && ImGui::BeginDragDropSource
+                ImGui::BeginDragDropSource
                 (
                   ImGuiDragDropFlags_SourceAllowNullID
                 )
@@ -632,11 +630,6 @@ namespace ToolKit
 
     void FolderView::ShowContextMenu(DirectoryEntry* entry)
     {
-      if (m_path.find("Engine") != String::npos)  // Engine folder is readonly
-      {
-        return;
-      }
-
       StringArray commands;
       String path = m_path + GetPathSeparatorAsStr();
       if (path.find(MaterialPath("")) != String::npos)
