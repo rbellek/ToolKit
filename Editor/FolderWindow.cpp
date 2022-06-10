@@ -433,8 +433,12 @@ namespace ToolKit
               );
               if
               (
-                !(m_path.find("Engine") != String::npos)  // Engine folder is readonly
-                && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)
+                // Engine folder is readonly
+                !(m_path.find("Engine") != String::npos)
+                && ImGui::BeginDragDropSource
+                (
+                  ImGuiDragDropFlags_SourceAllowNullID
+                )
               )
               {
                 ImGui::SetDragDropPayload

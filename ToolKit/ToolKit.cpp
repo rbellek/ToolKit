@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <string>
 
 #include "DebugNew.h"
 
@@ -237,7 +238,7 @@ namespace ToolKit
     splits.push_back("Resources");
     splits.push_back("Engine");
     static String res = ConcatPaths(splits);
-    
+
     return res;
   }
 
@@ -247,7 +248,7 @@ namespace ToolKit
 
     return res;
   }
-  
+
   String ResourcePath(bool def)
   {
     if (!def)
