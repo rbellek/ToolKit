@@ -400,38 +400,18 @@ namespace ToolKit
           ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Projects"))
+        {
+          ShowMenuProjects();
+          ImGui::EndMenu();
+        }
+
         ImGui::EndMainMenuBar();
       }
     }
 
     void UI::ShowMenuFile()
     {
-
-      if (ImGui::BeginMenu("Projects"))
-      {
-        if (ImGui::MenuItem("New"))
-        {
-          StringInputWindow* inputWnd = new StringInputWindow("NewProject", true);
-          inputWnd->m_inputVal = "New Project";
-          inputWnd->m_inputLabel = "Name";
-          inputWnd->m_hint = "Project name";
-          inputWnd->m_taskFn = [](const String& val)
-          {
-            g_app->OnNewProject(val);
-          };
-        }
-
-        ImGui::Separator();
-        for (const Project& project : g_app->m_workspace.m_projects)
-        {
-          if (ImGui::MenuItem(project.name.c_str()))
-          {
-            g_app->OpenProject(project);
-          }
-        }
-        ImGui::EndMenu();
-      }
-
       if (ImGui::BeginMenu("Scene"))
       {
         if (ImGui::MenuItem("New"))
@@ -593,6 +573,35 @@ namespace ToolKit
         }
       }
 #endif
+    }
+
+    void UI::ShowMenuProjects()
+    {
+      if (ImGui::MenuItem("New"))
+      {
+        StringInputWindow* inputWnd = new StringInputWindow("NewProject", true);
+        inputWnd->m_inputVal = "New Project";
+        inputWnd->m_inputLabel = "Name";
+        inputWnd->m_hint = "Project name";
+        inputWnd->m_taskFn = [](const String& val)
+        {
+          g_app->OnNewProject(val);
+        };
+      }
+
+      if (ImGui::MenuItem("Pack Project"))
+      {
+        g_app->PackResources();
+      }
+      ImGui::Separator();
+
+      for (const Project& project : g_app->m_workspace.m_projects)
+      {
+        if (ImGui::MenuItem(project.name.c_str()))
+        {
+          g_app->OpenProject(project);
+        }
+      }
     }
 
     void UI::ShowImportWindow()
