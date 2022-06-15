@@ -1,18 +1,22 @@
 
 #include "FileManager.h"
 
+#include <string>
+#include <unordered_map>
+
 #include "ToolKit.h"
 
 namespace ToolKit
 {
   void FileManager::PackResources(const String& path)
   {
-    GetUsedResourcePaths(path);
+    LoadAllScenes(path);
+    GetAllUsedResourcePaths();
     GetAnimationPaths(ConcatPaths({ path, "..", "Meshes", "anim" }));
     CreatePackResources();
   }
 
-  void FileManager::GetUsedResourcePaths(const String& path)
+  void FileManager::LoadAllScenes(const String& path)
   {
     // Resources in the scene files
     for (const auto& entry : std::filesystem::directory_iterator(path))
@@ -20,69 +24,93 @@ namespace ToolKit
       if (entry.is_directory())
       {
         // Go scenes in directories
-        GetUsedResourcePaths(entry.path().string());
+        LoadAllScenes(entry.path().string());
         continue;
       }
 
-      // Traverse scene file
+      // Load all scenes
       String pt = entry.path().string();
       ScenePtr scene = GetSceneManager()->Create<Scene>(pt);
       scene->Load();
       scene->Init();
+    }
+  }
 
-      // Look for mesh component
-      for (Entity* ntt : scene->GetEntities())
+  void FileManager::GetAllUsedResourcePaths()
+  {
+    std::unordered_map<String, ResourcePtr> mp;
+
+    // No manager for fonts
+
+    // Material
+    mp = GetMaterialManager()->m_storage;
+    for (auto it = mp.begin(); it != mp.end(); it++)
+    {
+      String absolutePath = it->first;
+
+      // Skip default.material
+      if (!it->second->m_loaded)
       {
-        MeshComponentPtr mc = ntt->GetComponent<MeshComponent>();
-        if (mc != nullptr)
-        {
-          // Mesh files
-          String file = mc->Mesh()->GetFile();
-          if (!file.empty())
-          {
-            m_meshResourcePaths.insert(mc->Mesh()->GetFile());
-          }
-          else
-          {
-            continue;
-          }
-
-          // Material files
-          MaterialPtr mat = mc->Mesh()->m_material;
-          if (mat != nullptr)
-          {
-            file = mat->GetFile();
-            if (!file.empty())
-            {
-              m_materialResourcePaths.insert(mat->GetFile());
-            }
-          }
-          else
-          {
-            continue;
-          }
-
-          // Textures
-          if (mat->m_diffuseTexture != nullptr)
-          {
-            m_textureResourcePaths.insert(mat->m_diffuseTexture->GetFile());
-          }
-
-          // Shaders
-          if (mat->m_vertexShader != nullptr)
-          {
-            m_shaderResourcePaths.insert(mat->m_vertexShader->GetFile());
-          }
-          if (mat->m_fragmetShader != nullptr)
-          {
-            m_shaderResourcePaths.insert(mat->m_fragmetShader->GetFile());
-          }
-          if (mat->m_cubeMap != nullptr)
-          {
-            m_shaderResourcePaths.insert(mat->m_cubeMap->GetFile());
-          }
-        }
+        continue;
       }
+
+      // If the path is relative, make it absolute
+      if (absolutePath[0] == '.')
+      {
+        size_t index = absolutePath.find("Materials");
+        absolutePath = absolutePath.substr(index);
+        absolutePath = ConcatPaths({ DefaultAbsolutePath(), absolutePath});
+      }
+
+      m_materialResourcePaths.insert(absolutePath);
+    }
+
+    // Meshes
+    mp = GetMeshManager()->m_storage;
+    for (auto it = mp.begin(); it != mp.end(); it++)
+    {
+      String absolutePath = it->first;
+      // If the path is relative, make it absolute
+      if (absolutePath[0] == '.')
+      {
+        size_t index = absolutePath.find("Meshes");
+        absolutePath = absolutePath.substr(index);
+        absolutePath = ConcatPaths({ DefaultAbsolutePath(), absolutePath });
+      }
+
+      m_meshResourcePaths.insert(absolutePath);
+    }
+
+    // Shaders
+    mp = GetShaderManager()->m_storage;
+    for (auto it = mp.begin(); it != mp.end(); it++)
+    {
+      String absolutePath = it->first;
+      // If the path is relative, make it absolute
+      if (absolutePath[0] == '.')
+      {
+        size_t index = absolutePath.find("Shaders");
+        absolutePath = absolutePath.substr(index);
+        absolutePath = ConcatPaths({ DefaultAbsolutePath(), absolutePath });
+      }
+
+      m_shaderResourcePaths.insert(absolutePath);
+    }
+
+    // Textures
+    mp = GetTextureManager()->m_storage;
+    for (auto it = mp.begin(); it != mp.end(); it++)
+    {
+      String absolutePath = it->first;
+      // If the path is relative, make it absolute
+      if (absolutePath[0] == '.')
+      {
+        size_t index = absolutePath.find("Textures");
+        absolutePath = absolutePath.substr(index);
+        absolutePath = ConcatPaths({ DefaultAbsolutePath(), absolutePath });
+      }
+
+      m_textureResourcePaths.insert(absolutePath);
     }
   }
 
@@ -212,7 +240,7 @@ namespace ToolKit
       );
       return;
     }
-    
+
     if
     (
       !std::filesystem::create_directory(m_minMeshesDirectoryPath)

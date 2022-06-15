@@ -9,11 +9,12 @@ namespace ToolKit
 {
   class TK_API FileManager
   {
-  public:
+   public:
     void PackResources(const String& path);
 
-  private:
-    void GetUsedResourcePaths(const String& path);
+   private:
+    void LoadAllScenes(const String& path);
+    void GetAllUsedResourcePaths();
     void GetAnimationPaths(const String& path);
     void CreatePackResources();
     void CreatePackDirectories();
@@ -25,7 +26,7 @@ namespace ToolKit
     void CopyTextureResourcesToPack();
     void CopyAnimationResourcesToPack();
 
-  private:
+   private:
     std::set<String> m_fontResourcePaths;
     std::set<String> m_materialResourcePaths;
     std::set<String> m_meshResourcePaths;
