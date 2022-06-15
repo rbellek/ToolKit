@@ -12,8 +12,7 @@ namespace ToolKit
   {
     LoadAllScenes(path);
     GetAllUsedResourcePaths();
-    GetAnimationPaths(ConcatPaths({ path, "..", "Meshes", "anim" }));
-    CreatePackResources();
+    CreatePackResources(path);
   }
 
   void FileManager::LoadAllScenes(const String& path)
@@ -114,22 +113,7 @@ namespace ToolKit
     }
   }
 
-  void FileManager::GetAnimationPaths(const String& path)
-  {
-    for (const auto& entry : std::filesystem::directory_iterator(path))
-    {
-      if (entry.is_directory())
-      {
-        // Go animations in directories
-        GetAnimationPaths(entry.path().string());
-        continue;
-      }
-
-      m_animationResourcePaths.insert(entry.path().string());
-    }
-  }
-
-  void FileManager::CreatePackResources()
+  void FileManager::CreatePackResources(const String& path)
   {
     // Create directories
     CreatePackDirectories();
@@ -140,7 +124,8 @@ namespace ToolKit
     CopyMeshResourcesToPack();
     CopyShaderResourcesToPack();
     CopyTextureResourcesToPack();
-    CopyAnimationResourcesToPack();
+    CopyAnimationResourcesToPack(ConcatPaths({ path, "..", "Meshes", "anim" }));
+    CopySceneResourcesToPack(path);
 
     GetLogger()->WriteConsole(LogType::Warning, "Resources packed.");
   }
@@ -180,6 +165,10 @@ namespace ToolKit
     (
       { minResourceDirectoryPath, "Meshes", "anim"}
     );
+    m_minSceneDirectoryPath = ConcatPaths
+    (
+      { minResourceDirectoryPath, "Scenes" }
+    );
 
     // Create directories
     if
@@ -195,7 +184,7 @@ namespace ToolKit
       GetLogger()->WriteConsole
       (
         LogType::Warning,
-        "%s",
+        "Error when creating directory: %s",
         minResourceDirectoryPath.c_str()
       );
       return;
@@ -215,7 +204,7 @@ namespace ToolKit
       GetLogger()->WriteConsole
       (
         LogType::Warning,
-        "%s",
+        "Error when creating directory: %s",
         m_minFontsDirectoryPath.c_str()
       );
       return;
@@ -235,7 +224,7 @@ namespace ToolKit
       GetLogger()->WriteConsole
       (
         LogType::Warning,
-        "%s",
+        "Error when creating directory: %s",
         m_minMaterialsDirectoryPath.c_str()
       );
       return;
@@ -255,7 +244,7 @@ namespace ToolKit
       GetLogger()->WriteConsole
       (
         LogType::Warning,
-        "%s",
+        "Error when creating directory: %s",
         m_minMeshesDirectoryPath.c_str()
       );
       return;
@@ -275,7 +264,7 @@ namespace ToolKit
       GetLogger()->WriteConsole
       (
         LogType::Warning,
-        "%s",
+        "Error when creating directory: %s",
         m_minShadersDirectoryPath.c_str()
       );
       return;
@@ -295,7 +284,7 @@ namespace ToolKit
       GetLogger()->WriteConsole
       (
         LogType::Warning,
-        "%s",
+        "Error when creating directory: %s",
         m_minTexturesDirectoryPath.c_str()
       );
       return;
@@ -315,8 +304,28 @@ namespace ToolKit
       GetLogger()->WriteConsole
       (
         LogType::Warning,
-        "%s",
+        "Error when creating directory: %s",
         m_minAnimDirectoryPath.c_str()
+      );
+      return;
+    }
+
+    if
+    (
+      !std::filesystem::create_directory(m_minSceneDirectoryPath)
+      && !std::filesystem::exists(m_minSceneDirectoryPath)
+    )
+    {
+      GetLogger()->Log
+      (
+        "Creating pack directory path has failed: "
+        + m_minSceneDirectoryPath.string()
+      );
+      GetLogger()->WriteConsole
+      (
+        LogType::Warning,
+        "Error when creating directory: %s",
+        m_minSceneDirectoryPath.c_str()
       );
       return;
     }
@@ -630,64 +639,26 @@ namespace ToolKit
     }
   }
 
-  void FileManager::CopyAnimationResourcesToPack()
+  void FileManager::CopyAnimationResourcesToPack(const String& path)
   {
-    for (String path : m_animationResourcePaths)
-    {
-      // Get directories
-      size_t index = path.find("anim");
-      if (index == String::npos)
-      {
-        GetLogger()->WriteConsole
-        (
-          LogType::Error,
-          "No \"anim\" directory in animation path."
-        );
-        return;
-      }
+    String animPath = ConcatPaths({ ResourcePath(), "Meshes", "anim" });
+    std::filesystem::copy
+    (
+      animPath,
+      m_minAnimDirectoryPath,
+      std::filesystem::copy_options::overwrite_existing |
+      std::filesystem::copy_options::recursive
+    );
+  }
 
-      constexpr size_t length = sizeof("anim");
-      String relativePath = path.substr(length + index);
-
-      String dirPath;
-      String name;
-      String ext;
-      DecomposePath(relativePath, &dirPath, &name, &ext);
-      if (dirPath.compare(name + ext))  // There are sub directories
-      {
-        // Create directories
-        dirPath = ConcatPaths({ m_minAnimDirectoryPath.string(), dirPath });
-        if
-          (
-          !std::filesystem::create_directories(dirPath)
-          && !std::filesystem::exists(dirPath)
-          )
-        {
-          GetLogger()->Log
-          (
-            "Creating pack directory path has failed: " + dirPath
-          );
-          GetLogger()->WriteConsole
-          (
-            LogType::Error,
-            "Packing failed while creating %s",
-            dirPath.c_str()
-          );
-          return;
-        }
-      }
-      else  // No sub diretories
-      {
-        dirPath = m_minAnimDirectoryPath.string();
-      }
-
-      // Copy
-      std::filesystem::copy
-      (
-        path,
-        dirPath,
-        std::filesystem::copy_options::overwrite_existing
-      );
-    }
+  void FileManager::CopySceneResourcesToPack(const String& path)
+  {
+    std::filesystem::copy
+    (
+      path,
+      m_minSceneDirectoryPath,
+      std::filesystem::copy_options::overwrite_existing |
+      std::filesystem::copy_options::recursive
+    );
   }
 }  // namespace ToolKit

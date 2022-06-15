@@ -15,8 +15,7 @@ namespace ToolKit
    private:
     void LoadAllScenes(const String& path);
     void GetAllUsedResourcePaths();
-    void GetAnimationPaths(const String& path);
-    void CreatePackResources();
+    void CreatePackResources(const String& path);
     void CreatePackDirectories();
 
     void CopyFontResourcesToPack();
@@ -24,7 +23,8 @@ namespace ToolKit
     void CopyMeshResourcesToPack();
     void CopyShaderResourcesToPack();
     void CopyTextureResourcesToPack();
-    void CopyAnimationResourcesToPack();
+    void CopyAnimationResourcesToPack(const String& path);
+    void CopySceneResourcesToPack(const String& path);
 
    private:
     std::set<String> m_fontResourcePaths;
@@ -32,7 +32,6 @@ namespace ToolKit
     std::set<String> m_meshResourcePaths;
     std::set<String> m_shaderResourcePaths;
     std::set<String> m_textureResourcePaths;
-    std::set<String> m_animationResourcePaths;
 
     std::filesystem::path m_minFontsDirectoryPath;
     std::filesystem::path m_minMaterialsDirectoryPath;
@@ -40,5 +39,6 @@ namespace ToolKit
     std::filesystem::path m_minShadersDirectoryPath;
     std::filesystem::path m_minTexturesDirectoryPath;
     std::filesystem::path m_minAnimDirectoryPath;
+    std::filesystem::path m_minSceneDirectoryPath;
   };
 }  // namespace ToolKit
