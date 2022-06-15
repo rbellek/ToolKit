@@ -1,6 +1,5 @@
 #pragma once
 
-#include <set>
 #include <filesystem>
 
 #include "Types.h"
@@ -27,18 +26,18 @@ namespace ToolKit
     void CopySceneResourcesToPack(const String& path);
 
    private:
-    std::set<String> m_fontResourcePaths;
-    std::set<String> m_materialResourcePaths;
-    std::set<String> m_meshResourcePaths;
-    std::set<String> m_shaderResourcePaths;
-    std::set<String> m_textureResourcePaths;
+    UniqueStringArray m_fontResourcePaths;
+    UniqueStringArray m_materialResourcePaths;
+    UniqueStringArray m_meshResourcePaths;
+    UniqueStringArray m_shaderResourcePaths;
+    UniqueStringArray m_textureResourcePaths;
 
-    std::filesystem::path m_minFontsDirectoryPath;
-    std::filesystem::path m_minMaterialsDirectoryPath;
-    std::filesystem::path m_minMeshesDirectoryPath;
-    std::filesystem::path m_minShadersDirectoryPath;
-    std::filesystem::path m_minTexturesDirectoryPath;
-    std::filesystem::path m_minAnimDirectoryPath;
-    std::filesystem::path m_minSceneDirectoryPath;
+    Path m_minFontsDirectoryPath;
+    Path m_minMaterialsDirectoryPath;
+    Path m_minMeshesDirectoryPath;
+    Path m_minShadersDirectoryPath;
+    Path m_minTexturesDirectoryPath;
+    Path m_minAnimDirectoryPath;
+    Path m_minSceneDirectoryPath;
   };
 }  // namespace ToolKit
