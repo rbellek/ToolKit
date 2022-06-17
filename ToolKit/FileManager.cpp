@@ -231,7 +231,7 @@ namespace ToolKit
     (
       zfile,
       file_data,
-      red * static_cast<unsigned int>(flen)
+      static_cast<unsigned int>(red * flen)
     );
     if (ret != ZIP_OK)
     {
