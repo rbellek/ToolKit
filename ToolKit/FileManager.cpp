@@ -227,7 +227,12 @@ namespace ToolKit
       malloc((flen + 1) * static_cast<unsigned int>(sizeof(char)))
     );
     red = fread(file_data, flen, 1, f);
-    ret = zipWriteInFileInZip(zfile, file_data, red * flen);
+    ret = zipWriteInFileInZip
+    (
+      zfile,
+      file_data,
+      red * static_cast<unsigned int>(flen)
+    );
     if (ret != ZIP_OK)
     {
       fclose(f);
