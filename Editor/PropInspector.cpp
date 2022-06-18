@@ -67,6 +67,36 @@ namespace ToolKit
           );
         }
         break;
+        case ParameterVariant::VariantType::MaterialPtr:
+        {
+          MaterialPtr mref = var->GetVar<MaterialPtr>();
+          DropSubZone
+          (
+            "Material##" + std::to_string(mref->m_id),
+            static_cast<uint> (UI::m_materialIcon->m_id),
+            mref->GetFile(),
+            [](const DirectoryEntry& entry) -> void
+            {
+              assert(false && "Not implemented !");
+            }
+          );
+        }
+        break;
+        case ParameterVariant::VariantType::MeshPtr:
+        {
+          MeshPtr mref = var->GetVar<MeshPtr>();
+          DropSubZone
+          (
+            "Mesh##" + std::to_string(mref->m_id),
+            static_cast<uint> (UI::m_meshIcon->m_id),
+            mref->GetFile(),
+            [](const DirectoryEntry& entry) -> void
+            {
+              assert(false && "Not implemented !");
+            }
+          );
+        }
+        break;
       default:
         break;
       }
@@ -165,13 +195,13 @@ namespace ToolKit
 
     void View::DropSubZone
     (
+      const String& title,
       uint fallbackIcon,
       const String& file,
       std::function<void(const DirectoryEntry& entry)> dropAction
     )
     {
-      String uid = "Resource##" + std::to_string(m_viewID);
-      if (ImGui::TreeNode(uid.c_str()))
+      if (ImGui::TreeNode(title.c_str()))
       {
         DropZone(fallbackIcon, file, dropAction);
 
@@ -189,7 +219,7 @@ namespace ToolKit
         return;
       }
 
-      ShowVariants();
+      ShowParameterBlock(m_entity->m_localData);
 
       // Missing data reporter.
       if (m_entity->IsDrawable())
@@ -343,14 +373,17 @@ namespace ToolKit
       }
 
       ShowCustomData();
+
+      for (ComponentPtr& com : m_entity->m_components)
+      {
+        ShowParameterBlock(com->m_localData);
+      }
     }
 
-    void EntityView::ShowVariants()
+    void EntityView::ShowParameterBlock(ParameterBlock& params)
     {
-      ParameterBlock& localData = m_entity->m_localData;
-
       VariantCategoryArray categories;
-      localData.GetCategories(categories, true);
+      params.GetCategories(categories, true);
 
       for (VariantCategory& category : categories)
       {
@@ -369,7 +402,7 @@ namespace ToolKit
         )
         {
           ParameterVariantRawPtrArray vars;
-          localData.GetByCategory(category.Name, vars);
+          params.GetByCategory(category.Name, vars);
 
           for (ParameterVariant* var : vars)
           {
@@ -638,6 +671,7 @@ namespace ToolKit
 
         DropSubZone
         (
+          "Mesh##" + std::to_string(entry->m_id),
           UI::m_meshIcon->m_textureId,
           entry->GetFile(),
           [this](const DirectoryEntry& dirEnt) -> void
@@ -852,6 +886,7 @@ namespace ToolKit
         {
           DropSubZone
           (
+            "Material##" + std::to_string(entry->m_id),
             UI::m_materialIcon->m_textureId,
             entry->GetFile(),
             [&drawable](const DirectoryEntry& dirEnt) -> void
@@ -915,7 +950,7 @@ namespace ToolKit
           ev->m_entity = curr;
           ev->Show();
 
-          if (curr->IsDrawable())
+          /*if (curr->IsDrawable())
           {
             MeshView* mev = GetView<MeshView>();
             mev->m_entity = curr;
@@ -924,7 +959,7 @@ namespace ToolKit
             MaterialView* mav = GetView <MaterialView>();
             mav->m_entity = curr;
             mav->Show();
-          }
+          }*/
 
           if (curr->IsSurfaceInstance())
           {

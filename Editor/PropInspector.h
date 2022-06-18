@@ -17,7 +17,7 @@ namespace ToolKit
       virtual void ShowVariant(ParameterVariant* var);
 
       void DropZone(uint fallbackIcon, const String& file, std::function<void(const DirectoryEntry& entry)> dropAction, const String& dropName = "");
-      void DropSubZone(uint fallbackIcon, const String& file, std::function<void(const DirectoryEntry& entry)> dropAction);
+      void DropSubZone(const String& title, uint fallbackIcon, const String& file, std::function<void(const DirectoryEntry& entry)> dropAction);
 
     public:
       Entity* m_entity = nullptr;
@@ -30,7 +30,7 @@ namespace ToolKit
       EntityView() { m_viewID = 1;  }
       virtual ~EntityView() {}
       virtual void Show();
-      virtual void ShowVariants();
+      virtual void ShowParameterBlock(ParameterBlock& params);
 
     protected:
       void ShowCustomData();
