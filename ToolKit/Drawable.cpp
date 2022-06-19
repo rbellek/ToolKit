@@ -18,6 +18,7 @@ namespace ToolKit
   Drawable::Drawable()
   {
     AddComponent(new MeshComponent());
+    AddComponent(new MaterialComponent());
   }
 
   Drawable::~Drawable()
@@ -77,7 +78,6 @@ namespace ToolKit
 
   void Drawable::DeSerialize(XmlDocument* doc, XmlNode* parent)
   {
-    ClearComponents();
     Entity::DeSerialize(doc, parent);
   }
 

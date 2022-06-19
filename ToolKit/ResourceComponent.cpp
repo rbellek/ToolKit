@@ -16,15 +16,6 @@ namespace ToolKit
       true,
       true
     );
-
-    Material_Define
-    (
-      std::make_shared<ToolKit::Material>(),
-      MeshComponentCategory.Name,
-      MeshComponentCategory.Priority,
-      true,
-      true
-    );
   }
 
   MeshComponent::~MeshComponent()
@@ -41,17 +32,16 @@ namespace ToolKit
     Mesh()->Init(flushClientSideArray);
   }
 
-  void MeshComponent::Serialize(XmlDocument* doc, XmlNode* parent) const
-  {
-    if (!MeshC()->IsDynamic())
-    {
-      Component::Serialize(doc, parent);
-    }
-  }
-
-
   MaterialComponent::MaterialComponent()
   {
+    Material_Define
+    (
+      std::make_shared<ToolKit::Material>(),
+      MaterialComponentCategory.Name,
+      MaterialComponentCategory.Priority,
+      true,
+      true
+    );
   }
 
   MaterialComponent::~MaterialComponent()
@@ -61,14 +51,6 @@ namespace ToolKit
   void MaterialComponent::Init(bool flushClientSideArray)
   {
     Material()->Init(flushClientSideArray);
-  }
-
-  void MaterialComponent::Serialize(XmlDocument* doc, XmlNode* parent) const
-  {
-    if (!MaterialC()->IsDynamic())
-    {
-      Component::Serialize(doc, parent);
-    }
   }
 
 }

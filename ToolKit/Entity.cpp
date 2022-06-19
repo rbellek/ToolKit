@@ -326,6 +326,7 @@ namespace ToolKit
 
     m_localData.DeSerialize(doc, parent);
 
+    ClearComponents();
     if (XmlNode* components = node->first_node("Components"))
     {
       XmlNode* comNode = components->first_node(XmlComponent.c_str());

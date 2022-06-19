@@ -34,7 +34,8 @@ namespace ToolKit
     XmlNode* componentNode = CreateXmlNode(doc, XmlComponent, parent);
     WriteAttr
     (
-      componentNode, doc, XmlParamterTypeAttr, std::to_string
+      componentNode, doc, XmlParamterTypeAttr,
+      std::to_string
       (
         static_cast<int> (GetType())
       )
@@ -57,6 +58,9 @@ namespace ToolKit
       break;
       case ComponentType::DirectionComponent:
         return new DirectionComponent();
+      break;
+      case ComponentType::MaterialComponent:
+        return new MaterialComponent();
       break;
       case ComponentType::Base:
       default:

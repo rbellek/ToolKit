@@ -43,36 +43,31 @@ namespace ToolKit
     */
     void Init(bool flushClientSideArray);
 
-    /**
-    * Overrides default serialization to avoid saving dynamically created
-    * resources. Because dynamic resources are created from scratch
-    * in every runtime.
-    */
-    void Serialize(XmlDocument* doc, XmlNode* parent) const override;
-
     public:
     TKDeclareParam(MeshPtr, Mesh);  //!< Component's Mesh resource.
+  };
 
+  static VariantCategory MaterialComponentCategory
+  {
+    "Material Component",
+    90
+  };
+
+  class TK_API MaterialComponent : public Component
+  {   
+   public:
+    TKComponentType(MaterialComponent);
+
+    MaterialComponent();
+    virtual ~MaterialComponent();
+    void Init(bool flushClientSideArray);
+
+   public:
     /**
     * Component's material resource. In case this object is not null, Renderer
     * picks this material to render the mesh otherwise falls back to Material
     * within the Mesh.
     */
-    TKDeclareParam(MaterialPtr, Material);
-  };
-
-  class TK_API MaterialComponent : public Component
-  {   
-    public:
-    TKComponentType(MaterialComponent);
-
-    MaterialComponent();
-    virtual ~MaterialComponent();
-
-    void Init(bool flushClientSideArray);
-    void Serialize(XmlDocument* doc, XmlNode* parent) const override;
-
-  public:
     TKDeclareParam(MaterialPtr, Material);
   };
 
