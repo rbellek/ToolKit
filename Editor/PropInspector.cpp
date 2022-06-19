@@ -69,15 +69,26 @@ namespace ToolKit
         break;
         case ParameterVariant::VariantType::MaterialPtr:
         {
-          MaterialPtr mref = var->GetVar<MaterialPtr>();
+          MaterialPtr& mref = var->GetVar<MaterialPtr>();
           DropSubZone
           (
             "Material##" + std::to_string(mref->m_id),
             static_cast<uint> (UI::m_materialIcon->m_id),
             mref->GetFile(),
-            [](const DirectoryEntry& entry) -> void
+            [&mref](const DirectoryEntry& entry) -> void
             {
-              assert(false && "Not implemented !");
+              if (GetResourceType(entry.m_ext) == ResourceType::Material)
+              {
+                mref = GetMaterialManager()->Create<Material>(entry.GetFullPath());
+              }
+              else
+              {
+                GetLogger()->WriteConsole
+                (
+                  LogType::Error,
+                  "Only Material Types are accepted."
+                );
+              }
             }
           );
         }
