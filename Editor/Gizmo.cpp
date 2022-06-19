@@ -8,7 +8,7 @@
 #include "ToolKit.h"
 #include "Node.h"
 #include "Surface.h"
-#include "Directional.h"
+#include "Camera.h"
 #include "Mesh.h"
 #include "Material.h"
 #include "Texture.h"
@@ -17,6 +17,7 @@
 #include "GlobalDef.h"
 #include "ConsoleWindow.h"
 #include "EditorViewport.h"
+#include "ResourceComponent.h"
 #include "GL/glew.h"
 #include "DebugNew.h"
 

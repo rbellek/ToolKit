@@ -5,6 +5,7 @@
 #include "MathUtil.h"
 #include "Util.h"
 #include "Light.h"
+#include "ResourceComponent.h"
 #include "DebugNew.h"
 
 namespace ToolKit

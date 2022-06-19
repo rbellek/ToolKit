@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Mesh.h"
+#include "ResourceComponent.h"
 #include "Material.h"
 #include "ToolKit.h"
 #include "Node.h"

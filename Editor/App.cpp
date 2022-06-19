@@ -16,7 +16,7 @@
 #include "GlobalDef.h"
 #include "OverlayUI.h"
 #include "Grid.h"
-#include "Directional.h"
+#include "Camera.h"
 #include "Mod.h"
 #include "ConsoleWindow.h"
 #include "FolderWindow.h"
@@ -24,6 +24,7 @@
 #include "PropInspector.h"
 #include "PluginWindow.h"
 #include "EditorViewport2d.h"
+#include "DirectionComponent.h"
 #include "GL/glew.h"
 #include "DebugNew.h"
 

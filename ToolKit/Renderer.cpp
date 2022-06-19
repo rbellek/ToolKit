@@ -5,7 +5,7 @@
 #include "Mesh.h"
 #include "Drawable.h"
 #include "Texture.h"
-#include "Directional.h"
+#include "Camera.h"
 #include "Node.h"
 #include "Material.h"
 #include "Surface.h"
@@ -16,6 +16,8 @@
 #include "UIManager.h"
 #include "Shader.h"
 #include "ToolKit.h"
+#include "DirectionComponent.h"
+#include "ResourceComponent.h"
 #include "GL/glew.h"
 #include "DebugNew.h"
 

@@ -5,7 +5,7 @@
 #include "Mesh.h"
 #include "ToolKit.h"
 #include "MathUtil.h"
-#include "Directional.h"
+#include "DirectionComponent.h"
 #include "Node.h"
 #include "DebugNew.h"
 

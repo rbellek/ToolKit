@@ -5,8 +5,9 @@
 #include "PropInspector.h"
 #include "Util.h"
 #include "App.h"
-#include "DebugNew.h"
 #include "Light.h"
+#include "DirectionComponent.h"
+#include "DebugNew.h"
 
 #include <filesystem>
 #include <vector>

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "Directional.h"
+#include "Camera.h"
 #include "Renderer.h"
 #include "App.h"
 #include "GlobalDef.h"
@@ -16,6 +16,7 @@
 #include "Gizmo.h"
 #include "Mod.h"
 #include "Util.h"
+#include "DirectionComponent.h"
 #include "DebugNew.h"
 
 

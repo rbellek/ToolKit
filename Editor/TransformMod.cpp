@@ -4,7 +4,7 @@
 #include "Node.h"
 #include "EditorViewport.h"
 #include "ConsoleWindow.h"
-#include "Directional.h"
+#include "Camera.h"
 #include "Util.h"
 #include "DebugNew.h"
 

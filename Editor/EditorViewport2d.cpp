@@ -1,5 +1,5 @@
 #include "EditorViewport2d.h"
-#include "Directional.h"
+#include "Camera.h"
 #include "Renderer.h"
 #include "App.h"
 #include "GlobalDef.h"
