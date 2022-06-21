@@ -1,8 +1,8 @@
 
 #include "FileManager.h"
 
-#include <string>
 #include <string.h>
+#include <string>
 #include <unordered_map>
 #include <memory>
 #include <iostream>
@@ -11,6 +11,12 @@
 
 namespace ToolKit
 {
+  FileManager::~FileManager()
+  {
+    // Close zip file
+    unzClose(zfile);
+  }
+
   XmlFile FileManager::GetXmlFile(const String& path)
   {
     String pakPath = ConcatPaths({ ResourcePath(), "..", "MinResources.pak" });
@@ -23,18 +29,24 @@ namespace ToolKit
     }
     const char* relativePathC = relativePath.c_str();
 
-    zipFile zfile = unzOpen(pakPath.c_str());
+    static bool openZip = true;
+
+    if (openZip)
+    {
+      zfile = unzOpen(pakPath.c_str());
+    }
+
     if (zfile)
     {
+      openZip = false;
       XmlFile file = ReadFileFromZip(zfile, relativePathC, path.c_str());
-      unzClose(zfile);
+
       return file;
     }
     else
     {
       // Zip pak not found, read from file at default path
       XmlFile file = XmlFile(path.c_str());
-      unzClose(zfile);
       return file;
     }
   }
@@ -329,7 +341,12 @@ namespace ToolKit
     }
   }
 
-  XmlFile FileManager::ReadFileFromZip(zipFile zfile, const char* relativePath, const char* path)
+  XmlFile FileManager::ReadFileFromZip
+  (
+    zipFile zfile,
+    const char* relativePath,
+    const char* path
+  )
   {
     if (unzGoToFirstFile(zfile) == UNZ_OK)
     {
@@ -341,11 +358,37 @@ namespace ToolKit
           unz_file_info fileInfo;
           memset(&fileInfo, 0, sizeof(unz_file_info));
 
-          if (unzGetCurrentFileInfo(zfile, &fileInfo, NULL, 0, NULL, 0, NULL, 0) == UNZ_OK)
+          if
+          (
+            unzGetCurrentFileInfo
+            (
+              zfile,
+              &fileInfo,
+              NULL,
+              0,
+              NULL,
+              0,
+              NULL,
+              0
+            ) == UNZ_OK
+          )
           {
             // Get file info
-            char* filename = (char*)malloc(fileInfo.size_filename + 1);
-            unzGetCurrentFileInfo(zfile, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+            char* filename = reinterpret_cast<char*>
+            (
+              malloc(fileInfo.size_filename + 1)
+            );
+            unzGetCurrentFileInfo
+            (
+              zfile,
+              &fileInfo,
+              filename,
+              fileInfo.size_filename + 1,
+              NULL,
+              0,
+              NULL,
+              0
+            );
             filename[fileInfo.size_filename] = '\0';
 
             if (strcmp(filename, relativePath))
@@ -356,21 +399,29 @@ namespace ToolKit
             }
 
             // Read file
-            unsigned int filesize = static_cast<unsigned int>(fileInfo.uncompressed_size);
-            char* fileBuffer = (char*)malloc(filesize);
+            unsigned int filesize =
+            static_cast<unsigned int>(fileInfo.uncompressed_size);
+            char* fileBuffer = reinterpret_cast<char*>(malloc(filesize));
             int readBytes = unzReadCurrentFile(zfile, fileBuffer, filesize);
             if (readBytes < 0)
             {
-              GetLogger()->Log("Error reading compressed file: " + String(filename));
-              GetLogger()->WriteConsole(LogType::Error, "Error reading compressed file: %s", filename);
+              GetLogger()->Log
+              (
+                "Error reading compressed file: " + String(filename)
+              );
+              GetLogger()->WriteConsole
+              (
+                LogType::Error,
+                "Error reading compressed file: %s",
+                filename
+              );
             }
 
             // Create XmlFile object
-            _streambuf* sbuf = new _streambuf(fileBuffer, fileBuffer + filesize);
-            std::basic_istream<char> stream(sbuf);
+            _streambuf sbuf(fileBuffer, fileBuffer + filesize);
+            std::basic_istream<char> stream(&sbuf);
             XmlFile file(stream);
 
-            delete sbuf;
             free(fileBuffer);
             free(filename);
 
@@ -379,32 +430,9 @@ namespace ToolKit
 
           unzCloseCurrentFile(zfile);
         }
-
       } while (unzGoToNextFile(zfile) == UNZ_OK);
     }
 
     return XmlFile(path);
   }
-
-  /*
-  bool FileManager::FileExistsInPack(const String& path)
-  {
-    bool ret = false;
-    zipFile zfile = unzOpen64(m_pakPath.c_str());
-    if (zfile)
-    {
-      if (unzLocateFile(zfile, path.c_str(), true) == UNZ_OK)
-      {
-        ret = true;
-      }
-    }
-    else
-    {
-      GetLogger()->WriteConsole(LogType::Warning, "Could not open pak for unzipping");
-    }
-
-    unzClose(zfile);
-    return ret;
-  }
-  */
 }  // namespace ToolKit
