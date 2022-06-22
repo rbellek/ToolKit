@@ -13,9 +13,15 @@ namespace ToolKit
   class TK_API FileManager
   {
    public:
-    ~FileManager();
-
     XmlFile GetXmlFile(const String& path);
+    uint8* GetImageFile
+    (
+      const String& path,
+      int* x,
+      int* y,
+      int* comp,
+      int reqComp
+    );
     void PackResources(const String& path);
 
    private:
@@ -29,16 +35,25 @@ namespace ToolKit
     void GetScenePaths(const String& path);
 
     String GetRelativeResourcesPath(const String& path);
-    XmlFile ReadFileFromZip
+    XmlFile ReadXmlFileFromZip
     (
       zipFile zfile,
       const char* relativePath,
       const char* path
     );
+    uint8* ReadImageFileFromZip
+    (
+      zipFile zfile,
+      const char* relativePath,
+      const char* path,
+      int* x,
+      int* y,
+      int* comp,
+      int reqComp
+    );
 
    private:
     StringSet allPaths;
-    zipFile zfile;
 
     struct _streambuf : std::streambuf
     {

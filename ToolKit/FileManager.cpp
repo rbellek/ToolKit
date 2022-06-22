@@ -7,16 +7,12 @@
 #include <memory>
 #include <iostream>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
 #include "ToolKit.h"
 
 namespace ToolKit
 {
-  FileManager::~FileManager()
-  {
-    // Close zip file
-    unzClose(zfile);
-  }
-
   XmlFile FileManager::GetXmlFile(const String& path)
   {
     String pakPath = ConcatPaths({ ResourcePath(), "..", "MinResources.pak" });
@@ -29,18 +25,12 @@ namespace ToolKit
     }
     const char* relativePathC = relativePath.c_str();
 
-    static bool openZip = true;
-
-    if (openZip)
-    {
-      zfile = unzOpen(pakPath.c_str());
-    }
+    zipFile zfile = unzOpen(pakPath.c_str());
 
     if (zfile)
     {
-      openZip = false;
-      XmlFile file = ReadFileFromZip(zfile, relativePathC, path.c_str());
-
+      XmlFile file = ReadXmlFileFromZip(zfile, relativePathC, path.c_str());
+      unzClose(zfile);
       return file;
     }
     else
@@ -48,6 +38,50 @@ namespace ToolKit
       // Zip pak not found, read from file at default path
       XmlFile file = XmlFile(path.c_str());
       return file;
+    }
+  }
+
+  uint8* FileManager::GetImageFile
+  (
+    const String& path,
+    int* x,
+    int* y,
+    int* comp,
+    int reqComp
+  )
+  {
+    String pakPath = ConcatPaths({ ResourcePath(), "..", "MinResources.pak" });
+
+    // Get relative path from Resources directory
+    String relativePath = GetRelativeResourcesPath(path);
+    if (relativePath.empty())
+    {
+      return nullptr;
+    }
+    const char* relativePathC = relativePath.c_str();
+
+    zipFile zfile = unzOpen(pakPath.c_str());
+
+    if (zfile)
+    {
+      uint8* img = ReadImageFileFromZip
+      (
+        zfile,
+        relativePathC,
+        path.c_str(),
+        x,
+        y,
+        comp,
+        reqComp
+      );
+      unzClose(zfile);
+      return img;
+    }
+    else
+    {
+      // Zip pak not found
+      uint8* img = stbi_load(path.c_str(), x, y, comp, reqComp);
+      return img;
     }
   }
 
@@ -194,7 +228,6 @@ namespace ToolKit
       if (!AddFileToZip(zFile, path.c_str()))
       {
         GetLogger()->WriteConsole(LogType::Error, "Error adding file to zip.");
-        return false;
       }
     }
 
@@ -341,7 +374,7 @@ namespace ToolKit
     }
   }
 
-  XmlFile FileManager::ReadFileFromZip
+  XmlFile FileManager::ReadXmlFileFromZip
   (
     zipFile zfile,
     const char* relativePath,
@@ -374,10 +407,7 @@ namespace ToolKit
           )
           {
             // Get file info
-            char* filename = reinterpret_cast<char*>
-            (
-              malloc(fileInfo.size_filename + 1)
-            );
+            char* filename = new char[fileInfo.size_filename + 1]();
             unzGetCurrentFileInfo
             (
               zfile,
@@ -393,7 +423,7 @@ namespace ToolKit
 
             if (strcmp(filename, relativePath))
             {
-              free(filename);
+              delete[] filename;
               unzCloseCurrentFile(zfile);
               continue;
             }
@@ -401,7 +431,7 @@ namespace ToolKit
             // Read file
             unsigned int filesize =
             static_cast<unsigned int>(fileInfo.uncompressed_size);
-            char* fileBuffer = reinterpret_cast<char*>(malloc(filesize));
+            char* fileBuffer = new char[filesize]();
             int readBytes = unzReadCurrentFile(zfile, fileBuffer, filesize);
             if (readBytes < 0)
             {
@@ -422,8 +452,8 @@ namespace ToolKit
             std::basic_istream<char> stream(&sbuf);
             XmlFile file(stream);
 
-            free(fileBuffer);
-            free(filename);
+            delete[] fileBuffer;
+            delete[] filename;
 
             return file;
           }
@@ -434,5 +464,107 @@ namespace ToolKit
     }
 
     return XmlFile(path);
+  }
+
+  uint8* FileManager::ReadImageFileFromZip
+  (
+    zipFile zfile,
+    const char* relativePath,
+    const char* path,
+    int* x,
+    int* y,
+    int* comp,
+    int reqComp
+  )
+  {
+    if (unzGoToFirstFile(zfile) == UNZ_OK)
+    {
+      // Iterate over file info's
+      do
+      {
+        if (unzOpenCurrentFile(zfile) == UNZ_OK)
+        {
+          unz_file_info fileInfo;
+          memset(&fileInfo, 0, sizeof(unz_file_info));
+
+          if
+          (
+            unzGetCurrentFileInfo
+            (
+            zfile,
+            &fileInfo,
+            NULL,
+            0,
+            NULL,
+            0,
+            NULL,
+            0
+            ) == UNZ_OK
+          )
+          {
+            // Get file info
+            char* filename = new char[fileInfo.size_filename + 1]();
+            unzGetCurrentFileInfo
+            (
+              zfile,
+              &fileInfo,
+              filename,
+              fileInfo.size_filename + 1,
+              NULL,
+              0,
+              NULL,
+              0
+            );
+            filename[fileInfo.size_filename] = '\0';
+
+            if (strcmp(filename, relativePath))
+            {
+              delete[] filename;
+              unzCloseCurrentFile(zfile);
+              continue;
+            }
+
+            // Read file
+            unsigned int filesize =
+            static_cast<unsigned int>(fileInfo.uncompressed_size);
+            unsigned char* fileBuffer = new unsigned char[filesize]();
+            int readBytes = unzReadCurrentFile(zfile, fileBuffer, filesize);
+            if (readBytes < 0)
+            {
+              GetLogger()->Log
+              (
+                "Error reading compressed file: " + String(filename)
+              );
+              GetLogger()->WriteConsole
+              (
+                LogType::Error,
+                "Error reading compressed file: %s",
+                filename
+              );
+            }
+
+            // Load image
+            uint8* img = stbi_load_from_memory
+            (
+              fileBuffer,
+              filesize,
+              x,
+              y,
+              comp,
+              reqComp
+            );
+
+            delete[] fileBuffer;
+            delete[] filename;
+
+            return img;
+          }
+
+          unzCloseCurrentFile(zfile);
+        }
+      } while (unzGoToNextFile(zfile) == UNZ_OK);
+    }
+
+    return stbi_load(path, x, y, comp, reqComp);
   }
 }  // namespace ToolKit
