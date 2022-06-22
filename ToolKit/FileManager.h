@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <unordered_map>
 
 #include "zip.h"
 #include "unzip.h"
@@ -51,9 +52,24 @@ namespace ToolKit
       int* comp,
       int reqComp
     );
+    XmlFile CreateXmlFileFromZip(zipFile zfile, const char* filename, unsigned int filesize);
+    uint8* CreateImageFileFromZip
+    (
+      zipFile zfile,
+      const char* filename,
+      unsigned int filesize,
+      int* x,
+      int* y,
+      int* comp,
+      int reqComp
+    );
+
+    void GenerateOffsetTableForPakFiles(zipFile zfile);
 
    private:
     StringSet allPaths;
+    std::unordered_map<String, ZPOS64_T> m_zipFilesOffsetTable;
+    bool m_offsetTableCreated = false;
 
     struct _streambuf : std::streambuf
     {
