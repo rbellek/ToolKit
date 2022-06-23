@@ -411,7 +411,12 @@ namespace ToolKit
             ) == UNZ_OK
           )
           {
-            XmlFile file = CreateXmlFileFromZip(zfile, relativePath, static_cast<unsigned int>(fileInfo.uncompressed_size));
+            XmlFile file = CreateXmlFileFromZip
+            (
+              zfile,
+              relativePath,
+              static_cast<unsigned int>(fileInfo.uncompressed_size)
+            );
             return file;
           }
         }
@@ -470,7 +475,12 @@ namespace ToolKit
               continue;
             }
 
-            XmlFile file = CreateXmlFileFromZip(zfile, filename, static_cast<unsigned int>(fileInfo.uncompressed_size));
+            XmlFile file = CreateXmlFileFromZip
+            (
+              zfile,
+              filename,
+              static_cast<unsigned int>(fileInfo.uncompressed_size)
+            );
 
             delete[] filename;
 
@@ -522,7 +532,16 @@ namespace ToolKit
             ) == UNZ_OK
           )
           {
-            uint8* img = CreateImageFileFromZip(zfile, relativePath, static_cast<unsigned int>(fileInfo.uncompressed_size), x, y, comp, reqComp);
+            uint8* img = CreateImageFileFromZip
+            (
+              zfile,
+              relativePath,
+              static_cast<unsigned int>(fileInfo.uncompressed_size),
+              x,
+              y,
+              comp,
+              reqComp
+            );
             return img;
           }
         }
@@ -582,7 +601,16 @@ namespace ToolKit
             }
 
             // Read file
-            uint8* img = CreateImageFileFromZip(zfile, filename, static_cast<unsigned int>(fileInfo.uncompressed_size), x, y, comp, reqComp);
+            uint8* img = CreateImageFileFromZip
+            (
+              zfile,
+              filename,
+              static_cast<unsigned int>(fileInfo.uncompressed_size),
+              x,
+              y,
+              comp,
+              reqComp
+            );
 
             delete[] filename;
 
@@ -597,7 +625,12 @@ namespace ToolKit
     return stbi_load(path, x, y, comp, reqComp);
   }
 
-  XmlFile FileManager::CreateXmlFileFromZip(zipFile zfile, const char* filename, unsigned int filesize)
+  XmlFile FileManager::CreateXmlFileFromZip
+  (
+    zipFile zfile,
+    const char* filename,
+    unsigned int filesize
+  )
   {
     // Read file
     char* fileBuffer = new char[filesize]();
@@ -715,7 +748,7 @@ namespace ToolKit
             );
             filename[fileInfo.size_filename] = '\0';
 
-            ZPOS64_T offset = unzGetOffset64(zfile); // TODO without 64?
+            ZPOS64_T offset = unzGetOffset64(zfile);
 
             m_zipFilesOffsetTable[filename] = offset;
 
@@ -726,7 +759,5 @@ namespace ToolKit
     }
 
     m_offsetTableCreated = true;
-
-    // TODO write it to a file
   }
 }  // namespace ToolKit

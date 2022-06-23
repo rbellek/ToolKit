@@ -52,7 +52,12 @@ namespace ToolKit
       int* comp,
       int reqComp
     );
-    XmlFile CreateXmlFileFromZip(zipFile zfile, const char* filename, unsigned int filesize);
+    XmlFile CreateXmlFileFromZip
+    (
+      zipFile zfile,
+      const char* filename,
+      unsigned int filesize
+    );
     uint8* CreateImageFileFromZip
     (
       zipFile zfile,
