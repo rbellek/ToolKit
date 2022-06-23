@@ -834,7 +834,13 @@ namespace ToolKit
       (
         d * r * 2.25f
       );
-      m_gizmoLineBatches[0]->Generate(m_pnts, g_lightGizmoColor, DrawType::Line, 1.0f);
+      m_gizmoLineBatches[0]->Generate
+      (
+        m_pnts,
+        g_lightGizmoColor,
+        DrawType::Line,
+        1.0f
+      );
 
       // Calculating circles
       int zeroCount = 0;
