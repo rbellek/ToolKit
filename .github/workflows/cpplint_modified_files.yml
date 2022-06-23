@@ -31,4 +31,4 @@ jobs:
             sys.exit(0)
 
           print("cpplint:")
-          subprocess.run(["cpplint", "-exclude=Dependency/ --filter=-legal/copyright,+build/c++14,-build/header_guard,+build/pragma_once,-whitespace/braces,-whitespace/newline,-whitespace/parens,-runtime/indentation_namespace,-build/include_subdir,-runtime/references"] + cpp_files, check=True, text=True)
+          subprocess.run(["cpplint", "--exclude=Dependency/ --filter=-legal/copyright,+build/c++14,-build/header_guard,+build/pragma_once,-whitespace/braces,-whitespace/newline,-whitespace/parens,-runtime/indentation_namespace,-build/include_subdir,-runtime/references"] + cpp_files, check=True, text=True)
