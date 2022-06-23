@@ -198,6 +198,10 @@ namespace ToolKit
             {
               static_cast<EditorSpotLight*>(light)->EnableGizmo(true);
             }
+            else if (light->GetLightType() == LightTypeEnum::LightPoint)
+            {
+              static_cast<EditorPointLight*>(light)->EnableGizmo(true);
+            }
             found = true;
             break;
           }
@@ -211,6 +215,10 @@ namespace ToolKit
           else if (light->GetLightType() == LightTypeEnum::LightSpot)
           {
             static_cast<EditorSpotLight*>(light)->EnableGizmo(false);
+          }
+          else if (light->GetLightType() == LightTypeEnum::LightPoint)
+          {
+            static_cast<EditorPointLight*>(light)->EnableGizmo(false);
           }
         }
       }
@@ -1295,6 +1303,10 @@ Fail:
               {
                 static_cast<EditorSpotLight*>(light)->EnableGizmo(false);
               }
+              else if (light->GetLightType() == LightTypeEnum::LightPoint)
+              {
+                static_cast<EditorPointLight*>(light)->EnableGizmo(false);
+              }
               m_renderer->Render(ntt, viewport->GetCamera());
               if (light->GetLightType() == LightTypeEnum::LightDirectional)
               {
@@ -1303,6 +1315,10 @@ Fail:
               else if (light->GetLightType() == LightTypeEnum::LightSpot)
               {
                 static_cast<EditorSpotLight*>(light)->EnableGizmo(true);
+              }
+              else if (light->GetLightType() == LightTypeEnum::LightPoint)
+              {
+                static_cast<EditorPointLight*>(light)->EnableGizmo(true);
               }
             }
             else
