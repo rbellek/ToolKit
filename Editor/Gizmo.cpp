@@ -1053,7 +1053,10 @@ namespace ToolKit
       Vec3 right = Vec3(1.0f, 0.0f, 0.0f);
       Vec3 forward = Vec3(0.0f, 0.0f, 1.0f);
       float deltaAngle = glm::two_pi<float>() / m_circleVertexCount;
-      Vec3 lightPos = light->m_node->GetTranslation(TransformationSpace::TS_WORLD);
+      Vec3 lightPos = light->m_node->GetTranslation
+      (
+        TransformationSpace::TS_WORLD
+      );
 
       // Create circle with rotating points around forward vector
       Vec3 startingPoint = up * light->Radius();

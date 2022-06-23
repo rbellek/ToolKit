@@ -50,7 +50,7 @@ namespace ToolKit
       void Init() override;
       void EnableGizmo(bool enable);
 
-    private:
+     private:
       PointLightGizmo* m_gizmo = nullptr;
       bool m_gizmoActive = false;
     };
