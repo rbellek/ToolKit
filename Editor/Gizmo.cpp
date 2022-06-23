@@ -834,7 +834,7 @@ namespace ToolKit
       (
         d * r * 2.25f
       );
-      m_gizmoLineBatches[0]->Generate(m_pnts, Vec3(0.0f), DrawType::Line, 1.0f);
+      m_gizmoLineBatches[0]->Generate(m_pnts, g_lightGizmoColor, DrawType::Line, 1.0f);
 
       // Calculating circles
       int zeroCount = 0;
@@ -932,13 +932,13 @@ namespace ToolKit
       m_gizmoLineBatches[1]->Generate
       (
         m_innerCirclePnts,
-        Vec3(0.15f),
+        g_lightGizmoColor,
         DrawType::LineStrip, 1.0f
       );
       m_gizmoLineBatches[2]->Generate
       (
         m_outerCirclePnts,
-        Vec3(0.15f),
+        g_lightGizmoColor,
         DrawType::LineStrip, 1.0f
       );
 
@@ -954,7 +954,7 @@ namespace ToolKit
       m_gizmoLineBatches[3]->Generate
       (
         m_conePnts,
-        Vec3(0.15f),
+        g_lightGizmoColor,
         DrawType::Line,
         1.0f
       );
@@ -1002,7 +1002,7 @@ namespace ToolKit
       m_gizmoLineBatches[0]->Generate
       (
         m_pnts,
-        Vec3(0.0f),
+        g_lightGizmoColor,
         DrawType::Line,
         1.0f
       );
@@ -1072,7 +1072,7 @@ namespace ToolKit
       m_gizmoLineBatches[0]->Generate
       (
         m_circlePnts1,
-        Vec3(0.15f),
+        g_lightGizmoColor,
         DrawType::LineStrip,
         1.0f
       );
@@ -1090,7 +1090,7 @@ namespace ToolKit
       m_gizmoLineBatches[1]->Generate
       (
         m_circlePnts2,
-        Vec3(0.15f),
+        g_lightGizmoColor,
         DrawType::LineStrip,
         1.0f
       );
@@ -1108,7 +1108,7 @@ namespace ToolKit
       m_gizmoLineBatches[2]->Generate
       (
         m_circlePnts3,
-        Vec3(0.15f),
+        g_lightGizmoColor,
         DrawType::LineStrip,
         1.0f
       );
