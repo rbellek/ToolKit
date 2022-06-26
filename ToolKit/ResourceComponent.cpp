@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Entity.h"
+#include "ToolKit.h"
 
 namespace ToolKit
 {
@@ -36,7 +37,7 @@ namespace ToolKit
   {
     Material_Define
     (
-      std::make_shared<ToolKit::Material>(),
+      nullptr,
       MaterialComponentCategory.Name,
       MaterialComponentCategory.Priority,
       true,

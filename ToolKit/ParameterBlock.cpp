@@ -110,106 +110,107 @@ namespace ToolKit
   ParameterVariant& ParameterVariant::operator= (bool var)
   {
     m_type = VariantType::Bool;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (byte var)
   {
     m_type = VariantType::byte;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (ubyte var)
   {
     m_type = VariantType::ubyte;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (float var)
   {
     m_type = VariantType::Float;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (int var)
   {
     m_type = VariantType::Int;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (uint var)
   {
     m_type = VariantType::UInt;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (const Vec3& var)
   {
     m_type = VariantType::Vec3;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (const Vec4& var)
   {
     m_type = VariantType::Vec4;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (const Mat3& var)
   {
     m_type = VariantType::Mat3;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (const Mat4& var)
   {
     m_type = VariantType::Mat4;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (const String& var)
   {
     m_type = VariantType::String;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (const char* var)
   {
     m_type = VariantType::String;
-    m_var = String(var);
+    String str = String(var);
+    AsignVal(str);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator= (ULongID var)
   {
     m_type = VariantType::ULongID;
-    m_var = var;
+    AsignVal(var);
     return *this;
   }
 
   ParameterVariant& ParameterVariant::operator=(const MeshPtr& var)
   {
-      m_type = VariantType::MeshPtr;
-      m_var = var;
-      return *this;
+    m_type = VariantType::MeshPtr;
+    AsignVal(var);
+    return *this;
   }
 
   ParameterVariant& ParameterVariant::operator=(const MaterialPtr& var)
   {
-      m_type = VariantType::MaterialPtr;
-      m_var = var;
-      return *this;
+    m_type = VariantType::MaterialPtr;
+    AsignVal(var);
+    return *this;
   }
 
   void ParameterVariant::Serialize(XmlDocument* doc, XmlNode* parent) const

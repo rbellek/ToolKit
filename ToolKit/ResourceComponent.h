@@ -7,7 +7,6 @@ namespace ToolKit
 
   typedef std::shared_ptr<class MeshComponent> MeshComponentPtr;
   typedef std::vector<MeshComponentPtr> MeshComponentPtrArray;
-
   static VariantCategory MeshComponentCategory
   {
     "Mesh Component",
@@ -47,6 +46,7 @@ namespace ToolKit
     TKDeclareParam(MeshPtr, Mesh);  //!< Component's Mesh resource.
   };
 
+  typedef std::shared_ptr<class MaterialComponent> MaterialComponentPtr;
   static VariantCategory MaterialComponentCategory
   {
     "Material Component",

@@ -46,6 +46,25 @@
 namespace ToolKit
 {
 
+  typedef 
+  std::variant
+    <
+    bool,
+    byte,
+    ubyte,
+    float,
+    int,
+    uint,
+    Vec3,
+    Vec4,
+    Mat3,
+    Mat4,
+    String,
+    ULongID,
+    MeshPtr,
+    MaterialPtr
+    > Value;
+
   /**
   * The category to group / access / sort and display the ParameterVariant.
   */
@@ -351,24 +370,26 @@ namespace ToolKit
     VariantCategory m_category;
     String m_name;  //<! Name of the variant.
 
+    /**
+    * Callback function for value changes. This function gets called before
+    * new value set.
+    */
+    std::function<void(Value& oldVal, Value& newVal)> m_onValueChangedFn;
+
    private:
-    std::variant
-      <
-      bool,
-      byte,
-      ubyte,
-      float,
-      int,
-      uint,
-      Vec3,
-      Vec4,
-      Mat3,
-      Mat4,
-      String,
-      ULongID,
-      MeshPtr,
-      MaterialPtr
-      > m_var;  //!< The variant that hold the actual data.
+    template<typename T>
+    void AsignVal(T& val)
+    {
+      Value newVal = val;
+      if (m_onValueChangedFn)
+      {
+        m_onValueChangedFn(m_var, newVal);
+      }
+      m_var = newVal;
+    }
+
+   private:
+    Value m_var;  //!< The variant that hold the actual data.
 
     VariantType m_type = VariantType::Int;  //!< Type of the variant.
   };

@@ -70,11 +70,18 @@ namespace ToolKit
         case ParameterVariant::VariantType::MaterialPtr:
         {
           MaterialPtr& mref = var->GetVar<MaterialPtr>();
+          String file, id;
+          if (mref)
+          {
+            id = std::to_string(mref->m_id);
+            file = mref->GetFile();
+          }
+
           DropSubZone
           (
-            "Material##" + std::to_string(mref->m_id),
+            "Material##" + id,
             static_cast<uint> (UI::m_materialIcon->m_id),
-            mref->GetFile(),
+            file,
             [&mref](const DirectoryEntry& entry) -> void
             {
               if (GetResourceType(entry.m_ext) == ResourceType::Material)

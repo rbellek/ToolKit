@@ -108,6 +108,15 @@ namespace ToolKit
   {
     MeshComponentPtrArray meshComponents;
     ntt->GetComponent<MeshComponent>(meshComponents);
+    
+    MaterialPtr nttMat;
+    if (MaterialComponentPtr matCom = ntt->GetComponent<MaterialComponent>())
+    {
+      if (nttMat = matCom->Material())
+      {
+        nttMat->Init();
+      }
+    }
 
     for (MeshComponentPtr meshCom : meshComponents)
     {
@@ -129,10 +138,13 @@ namespace ToolKit
 
       for (Mesh* mesh : meshCollector)
       {
-        m_mat = mesh->m_material.get();
         if (m_overrideMat != nullptr)
         {
           m_mat = m_overrideMat.get();
+        }
+        else
+        {
+          m_mat = nttMat ? nttMat.get() : mesh->m_material.get();
         }
 
         ProgramPtr prg = CreateProgram
