@@ -28,7 +28,7 @@ namespace ToolKit
 
   bool Entity::IsDrawable() const
   {
-    return false;
+    return GetComponent<MeshComponent>() != nullptr;
   }
 
   EntityType Entity::GetType() const

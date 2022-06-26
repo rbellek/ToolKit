@@ -149,6 +149,12 @@ namespace ToolKit
       SafeDel(m_lightMaster);
       m_sceneLights.clear();
 
+      for (Entity* dbgObj : m_perFrameDebugObjects)
+      {
+        SafeDel(dbgObj);
+      }
+      m_perFrameDebugObjects.clear();
+
       GetAnimationPlayer()->m_records.clear();
 
       ModManager::GetInstance()->UnInit();
@@ -287,7 +293,7 @@ namespace ToolKit
         // Render debug objects.
         if (!m_perFrameDebugObjects.empty())
         {
-          for (Drawable* dbgObj : m_perFrameDebugObjects)
+          for (Entity* dbgObj : m_perFrameDebugObjects)
           {
             m_renderer->Render(dbgObj, viewCam);
             SafeDel(dbgObj);

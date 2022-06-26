@@ -82,7 +82,7 @@ namespace ToolKit
       // Directional light gizmo
       for (LineBatch* lb : m_gizmo->GetGizmoLineBatches())
       {
-        MeshPtr mesh = lb->GetMesh();
+        MeshPtr mesh = lb->GetComponent<MeshComponent>()->Mesh();
         mesh->Init();
         mc->Mesh()->m_subMeshes.push_back(mesh);
       }
@@ -101,7 +101,8 @@ namespace ToolKit
 
           for (LineBatch* lb : m_gizmo->GetGizmoLineBatches())
           {
-            mc->Mesh()->m_subMeshes.push_back(lb->GetMesh());
+            MeshPtr lbMesh = lb->GetComponent<MeshComponent>()->Mesh();
+            mc->Mesh()->m_subMeshes.push_back(lbMesh);
           }
 
           m_gizmoActive = true;
@@ -235,7 +236,7 @@ namespace ToolKit
       // Gizmo
       for (LineBatch* lb : m_gizmo->GetGizmoLineBatches())
       {
-        MeshPtr mesh = lb->GetMesh();
+        MeshPtr mesh = lb->GetComponent<MeshComponent>()->Mesh();
         mesh->Init();
         mc->Mesh()->m_subMeshes.push_back(mesh);
       }
@@ -253,7 +254,8 @@ namespace ToolKit
           MeshComponentPtr mc = GetComponent<MeshComponent>();
           for (LineBatch* lb : m_gizmo->GetGizmoLineBatches())
           {
-            mc->Mesh()->m_subMeshes.push_back(lb->GetMesh());
+            MeshPtr lbMesh = lb->GetComponent<MeshComponent>()->Mesh();
+            mc->Mesh()->m_subMeshes.push_back(lbMesh);
           }
 
           m_gizmoActive = true;

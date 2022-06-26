@@ -64,7 +64,7 @@ namespace ToolKit
       void AdjustZoom(float delta) override;
 
      private:
-      void LoadDragMesh
+      /*void LoadDragMesh
       (
         bool& meshLoaded,
         DirectoryEntry dragEntry,
@@ -72,7 +72,8 @@ namespace ToolKit
         Drawable** dwMesh,
         Drawable** boundingBox,
         EditorScenePtr currScene
-      );
+      );*/
+
       Vec3 CalculateDragMeshPosition
       (
         bool& meshLoaded,

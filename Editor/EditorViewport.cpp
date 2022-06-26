@@ -642,7 +642,7 @@ namespace ToolKit
         if (dragEntry.m_ext == MESH)
         {
           // Load mesh
-          LoadDragMesh
+          /*LoadDragMesh
           (
             meshLoaded,
             dragEntry,
@@ -650,7 +650,7 @@ namespace ToolKit
             &dwMesh,
             &boundingBox,
             currScene
-          );
+          );*/
 
           // Show bounding box
           lastDragMeshPos = CalculateDragMeshPosition
@@ -791,7 +791,7 @@ namespace ToolKit
       }
     }
 
-    void EditorViewport::LoadDragMesh
+    /*void EditorViewport::LoadDragMesh
     (
       bool& meshLoaded,
       DirectoryEntry dragEntry,
@@ -828,7 +828,7 @@ namespace ToolKit
 
         meshLoaded = true;
       }
-    }
+    }*/
 
     Vec3 EditorViewport::CalculateDragMeshPosition
     (

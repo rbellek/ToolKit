@@ -38,7 +38,8 @@ namespace ToolKit
 
     void Cursor::Generate()
     {
-      MeshPtr& parentMesh = GetMesh();
+      MeshComponentPtr parentMeshComp = GetComponent<MeshComponent>();
+      MeshPtr parentMesh = parentMeshComp->Mesh();
       parentMesh->UnInit();
 
       // Billboard
@@ -122,15 +123,16 @@ namespace ToolKit
         }
 
         Arrow2d arrow(t);
-        MeshPtr& mesh = arrow.GetMesh();
-        mesh->m_material->GetRenderState()->depthTestEnabled = false;
+        MeshComponentPtr arrowMeshComp = arrow.GetComponent<MeshComponent>();
+        MeshPtr arrowMesh = arrowMeshComp->Mesh();
+        arrowMesh->m_material->GetRenderState()->depthTestEnabled = false;
         if (i == 0)
         {
-          SetMesh(mesh);
+          GetComponent<MeshComponent>()->Mesh() = arrowMesh;
         }
         else
         {
-          GetMesh()->m_subMeshes.push_back(mesh);
+          GetComponent<MeshComponent>()->Mesh()->m_subMeshes.push_back(arrowMesh);
         }
       }
     }
@@ -160,7 +162,8 @@ namespace ToolKit
       m_mesh = std::make_shared<Mesh>();
 
       LineBatch line(pnts, params.color, DrawType::Line, 2.0f);
-      m_mesh->m_subMeshes.push_back(line.GetMesh());
+      MeshPtr lnMesh = line.GetComponent<MeshComponent>()->Mesh();
+      m_mesh->m_subMeshes.push_back(lnMesh);
 
       MaterialPtr material =
       GetMaterialManager()->GetCopyOfUnlitColorMaterial();
@@ -169,14 +172,14 @@ namespace ToolKit
       if (params.type == SolidType::Cube)
       {
         Cube solid(params.solidDim);
-        MeshPtr& mesh = solid.GetMesh();
+        MeshPtr& mesh = solid.GetComponent<MeshComponent>()->Mesh();
         mesh->m_material = material;
         m_mesh->m_subMeshes.push_back(mesh);
       }
       else if (params.type == SolidType::Cone)
       {
         Cone solid({ params.solidDim.y, params.solidDim.x, 10, 10 });
-        MeshPtr& mesh = solid.GetMesh();
+        MeshPtr mesh = solid.GetComponent<MeshComponent>()->Mesh();
         mesh->m_material = material;
         m_mesh->m_subMeshes.push_back(mesh);
       }
@@ -216,7 +219,8 @@ namespace ToolKit
         };
 
         LineBatch guide(pnts, g_gizmoColor[axisInd % 3], DrawType::Line, 1.0f);
-        m_mesh->m_subMeshes.push_back(guide.GetMesh());
+        MeshPtr guideMesh = guide.GetComponent<MeshComponent>()->Mesh();
+        m_mesh->m_subMeshes.push_back(guideMesh);
       }
     }
 
@@ -276,7 +280,8 @@ namespace ToolKit
       corners.push_back(corners.front());
 
       LineBatch circle(corners, params.color, DrawType::LineStrip, 4.0f);
-      m_mesh = circle.GetMesh();
+      MeshPtr circleMesh = circle.GetComponent<MeshComponent>()->Mesh();
+      m_mesh = circleMesh;
 
       // Guide line.
       if (!glm::isNull(params.grabPnt, glm::epsilon<float>()))
@@ -299,7 +304,8 @@ namespace ToolKit
         pnts.push_back(glcl - dir * 999.0f);
 
         LineBatch guide(pnts, g_gizmoColor[axisIndx], DrawType::Line, 1.0f);
-        m_mesh->m_subMeshes.push_back(guide.GetMesh());
+        MeshPtr guideMesh = guide.GetComponent<MeshComponent>()->Mesh();
+        m_mesh->m_subMeshes.push_back(guideMesh);
       }
     }
 
@@ -642,7 +648,7 @@ namespace ToolKit
         mesh->m_subMeshes.push_back(m_handles[i]->m_mesh);
       }
       mesh->Init(false);
-      SetMesh(mesh);
+      GetComponent<MeshComponent>()->Mesh() = mesh;
     }
 
     GizmoHandle::Params LinearGizmo::GetParam() const
@@ -756,7 +762,7 @@ namespace ToolKit
         mesh->m_subMeshes.push_back(m_handles[i]->m_mesh);
       }
 
-      SetMesh(mesh);
+      GetComponent<MeshComponent>()->Mesh() = mesh;
     }
 
     void PolarGizmo::Render(Renderer* renderer, Camera* cam)
@@ -792,7 +798,8 @@ namespace ToolKit
       m_gizmoLineBatches[0] = new LineBatch();
 
       MeshComponent* mc = new MeshComponent();
-      mc->Mesh() = m_gizmoLineBatches[0]->GetMesh();
+      mc->Mesh() = 
+        m_gizmoLineBatches[0]->GetComponent<MeshComponent>()->Mesh();
       mc->Mesh()->m_material->Init();
       AddComponent(mc);
 
@@ -805,9 +812,21 @@ namespace ToolKit
       m_gizmoLineBatches[2] = new LineBatch();
       m_gizmoLineBatches[3] = new LineBatch();
 
-      mesh->m_subMeshes.push_back(m_gizmoLineBatches[1]->GetMesh());
-      mesh->m_subMeshes.push_back(m_gizmoLineBatches[2]->GetMesh());
-      mesh->m_subMeshes.push_back(m_gizmoLineBatches[3]->GetMesh());
+      mesh->m_subMeshes.push_back
+      (
+        m_gizmoLineBatches[1]->GetComponent<MeshComponent>()->Mesh()
+      );
+
+      mesh->m_subMeshes.push_back
+      (
+        m_gizmoLineBatches[2]->GetComponent<MeshComponent>()->Mesh()
+      );
+
+      mesh->m_subMeshes.push_back
+      (
+        m_gizmoLineBatches[3]->GetComponent<MeshComponent>()->Mesh()
+      );
+
       mesh->m_subMeshes[0]->m_material->Init();
       mesh->m_subMeshes[1]->m_material->Init();
       mesh->m_subMeshes[2]->m_material->Init();
@@ -973,7 +992,8 @@ namespace ToolKit
       m_gizmoLineBatches[0] = new LineBatch();
 
       MeshComponent* mc = new MeshComponent();
-      mc->Mesh() = m_gizmoLineBatches[0]->GetMesh();
+      mc->Mesh() = 
+        m_gizmoLineBatches[0]->GetComponent<MeshComponent>()->Mesh();
       mc->Mesh()->m_material->Init();
       AddComponent(mc);
     }
