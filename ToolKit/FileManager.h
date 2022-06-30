@@ -16,7 +16,7 @@ namespace ToolKit
    public:
     ~FileManager();
 
-    XmlFile GetXmlFile(const String& path);
+    XmlFile GetXmlFile(const String& filePath);
     uint8* GetImageFile
     (
       const String& path,
@@ -26,9 +26,7 @@ namespace ToolKit
       int reqComp
     );
     void PackResources(const String& path);
-
-    void ResetTimers();
-    void LogTimers();
+    bool IsFileInPak(const String& filename);
 
    private:
     void LoadAllScenes(const String& path);

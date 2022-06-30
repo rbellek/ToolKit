@@ -1,11 +1,11 @@
 #pragma once
 
+#include <unordered_map>
+#include <memory>
+
 #include "Types.h"
 #include "Util.h"
 #include "Logger.h"
-
-#include <unordered_map>
-#include <memory>
 
 namespace ToolKit
 {
@@ -47,10 +47,10 @@ namespace ToolKit
       if (!Exist(file))
       {
         std::shared_ptr<T> resource = std::static_pointer_cast<T> (CreateLocal(T::GetTypeStatic()));
-        if (!CheckFile(file))
+        if (!CheckFile(file) && CheckFileFromPak(file))
         {
           String def = GetDefaultResource(T::GetTypeStatic());
-          if (!CheckFile(def))
+          if (!CheckFile(def) && !CheckFileFromPak(file))
           {
             assert(0 && "No default resource !");
             return nullptr;
@@ -86,4 +86,4 @@ namespace ToolKit
     ResourceType m_type = ResourceType::Base;
   };
 
-}
+}  // namespace ToolKit

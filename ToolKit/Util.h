@@ -63,6 +63,7 @@ namespace ToolKit
   // File path operations.
   ///////////////////////////////////////////////////////
   TK_API bool CheckFile(const String& path);
+  TK_API bool CheckFileFromPak(const String& path);
   TK_API String CreateCopyFileFullPath(const String& fullPath);
   TK_API void DecomposePath
   (

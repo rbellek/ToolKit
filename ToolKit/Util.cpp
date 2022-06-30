@@ -257,6 +257,11 @@ namespace ToolKit
     return std::filesystem::exists(path);
   }
 
+  bool CheckFileFromPak(const String& path)
+  {
+    return GetFileManager()->IsFileInPak(path);
+  }
+
   String CreateCopyFileFullPath(const String& fullPath)
   {
     String cpyPath;

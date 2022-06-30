@@ -22,16 +22,15 @@ namespace ToolKit
     }
   }
 
-  XmlFile FileManager::GetXmlFile(const String& path)
+  XmlFile FileManager::GetXmlFile(const String& filePath)
   {
     String pakPath = ConcatPaths({ ResourcePath(), "..", "MinResources.pak" });
 
     // Get relative path from Resources directory
-    String relativePath = GetRelativeResourcesPath(path);
-    if (relativePath.empty())
-    {
-      return nullptr;
-    }
+    String relativePath;
+
+    relativePath = GetRelativeResourcesPath(filePath);
+
     const char* relativePathC = relativePath.c_str();
 
     if (!m_zfile)
@@ -42,14 +41,15 @@ namespace ToolKit
     if (m_zfile)
     {
       GenerateOffsetTableForPakFiles(m_zfile);
-      XmlFile file = ReadXmlFileFromZip(m_zfile, relativePathC, path.c_str());
+
+      XmlFile file = ReadXmlFileFromZip(m_zfile, relativePathC, filePath.c_str());
 
       return file;
     }
     else
     {
       // Zip pak not found, read from file at default path
-      XmlFile file = XmlFile(path.c_str());
+      XmlFile file = XmlFile(filePath.c_str());
 
       return file;
     }
@@ -390,13 +390,7 @@ namespace ToolKit
     }
     else
     {
-      GetLogger()->WriteConsole
-      (
-        LogType::Error,
-        "Resource is not under resources path: %s",
-        path
-      );
-      return "";
+      return path;
     }
   }
 
@@ -762,7 +756,11 @@ namespace ToolKit
 
             ZPOS64_T offset = unzGetOffset64(zfile);
 
-            m_zipFilesOffsetTable[filename] = offset;
+            // Unixfy the path
+            String filenameStr(filename);
+            UnixifyPath(filenameStr);
+
+            m_zipFilesOffsetTable[filenameStr.c_str()] = offset;
 
             delete[] filename;
           }
@@ -771,5 +769,15 @@ namespace ToolKit
     }
 
     m_offsetTableCreated = true;
+  }
+
+  bool FileManager::IsFileInPak(const String& filename)
+  {
+    if (m_zipFilesOffsetTable.find(filename.c_str()) == m_zipFilesOffsetTable.end())
+    {
+      return false;
+    }
+
+    return true;
   }
 }  // namespace ToolKit
