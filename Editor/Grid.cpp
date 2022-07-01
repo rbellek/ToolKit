@@ -123,7 +123,7 @@ namespace ToolKit
         for (int j = 0; j < 4; j++)
         {
           ToolKit::Vertex& clientVertex = mesh->m_clientSideVertices[j];
-          clientVertex.pos = 
+          clientVertex.pos =
           (
             clientVertex.pos * glm::vec3(scale.x, scale.y, 0.0f)
           ).xzy + offsets[i];

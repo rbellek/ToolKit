@@ -103,10 +103,13 @@ namespace ToolKit
       }
 
       // Resize Grid
-      g_app->m_2dGrid->Resize(
+      g_app->m_2dGrid->Resize
+      (
         m_gridWholeSize,
-        AxisLabel::XY, 0.25f * (1.0f / m_gridCellSizeByPixel),
-        100.0f);
+        AxisLabel::XY,
+        0.25f * (1.0f / m_gridCellSizeByPixel),
+        100.0f
+      );
 
       PanZoom(deltaTime);
     }
@@ -467,7 +470,7 @@ namespace ToolKit
         m_canvasSize.x * m_zoom * 0.5f,
         m_canvasSize.y * m_zoom * -0.5f,
         m_canvasSize.y * m_zoom * 0.5f,
-        0.01f,
+        0.001f,
         1000.0f
       );
     }

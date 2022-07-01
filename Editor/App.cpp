@@ -1593,7 +1593,7 @@ Fail:
       m_2dGrid = new Grid(glm::uvec2(g_app->m_playWidth, g_app->m_playHeight));
       m_2dGrid->Resize(
         UVec2(g_app->m_playWidth, g_app->m_playHeight),
-        AxisLabel::XY, 0.0025f * 10);  // Generate grid cells 10 x 10
+        AxisLabel::XY, 0.0025f * 10, 1.0f);  // Generate grid cells 10 x 10
     }
 
     void DebugMessage(const String& msg)
