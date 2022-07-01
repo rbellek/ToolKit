@@ -592,7 +592,7 @@ namespace ToolKit
   }
 
   // https://forum.unity.com/threads/how-do-i-find-the-closest-point-on-a-line.340058/
-  TK_API Vec3 ProjectPointOnLine(const Ray& baseLine, const Vec3& point)
+  TK_API Vec3 ProjectPointOntoLine(const Ray& baseLine, const Vec3& point)
   {
     Vec3 v = point - baseLine.position;
     float d = dot(v, baseLine.direction);
