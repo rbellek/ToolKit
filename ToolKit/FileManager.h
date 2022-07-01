@@ -26,7 +26,7 @@ namespace ToolKit
       int reqComp
     );
     void PackResources(const String& path);
-    
+
     bool CheckFileFromResources(const String& path);
 
    private:

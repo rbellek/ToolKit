@@ -39,7 +39,12 @@ namespace ToolKit
     {
       GenerateOffsetTableForPakFiles();
 
-      XmlFile file = ReadXmlFileFromZip(m_zfile, relativePath, filePath.c_str());
+      XmlFile file = ReadXmlFileFromZip
+      (
+        m_zfile,
+        relativePath,
+        filePath.c_str()
+      );
 
       return file;
     }
@@ -788,7 +793,11 @@ namespace ToolKit
 
   bool FileManager::IsFileInPak(const String& filename)
   {
-    if (m_zipFilesOffsetTable.find(filename.c_str()) == m_zipFilesOffsetTable.end())
+    if
+    (
+      m_zipFilesOffsetTable.find(filename.c_str())
+      == m_zipFilesOffsetTable.end()
+    )
     {
       return false;
     }
