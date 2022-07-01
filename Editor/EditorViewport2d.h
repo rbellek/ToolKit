@@ -12,7 +12,6 @@ namespace ToolKit
 
   namespace Editor
   {
-
     class EditorViewport2d : public EditorViewport
     {
      public:

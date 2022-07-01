@@ -157,7 +157,11 @@ namespace ToolKit
 
       void Update(float deltaTime) override;
       void Render(Renderer* renderer, Camera* cam);
+     private:
+      void UpdateGizmo2D();
+      void UpdateGizmo3D();
     };
+
 
     class SpotLightGizmo : public Entity
     {

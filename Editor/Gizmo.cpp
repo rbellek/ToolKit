@@ -19,6 +19,8 @@
 #include "EditorViewport.h"
 #include "GL/glew.h"
 #include "DebugNew.h"
+#include "App.h"
+#include "EditorViewport2d.h"
 
 namespace ToolKit
 {
@@ -481,12 +483,16 @@ namespace ToolKit
       AxisLabel hit = AxisLabel::None;
       for (size_t i = 0; i < m_handles.size(); i++)
       {
+        if (!m_handles[i]->m_mesh)
+        {
+          continue;
+        }
         if (m_handles[i]->HitTest(ray, t))
         {
           if (t < tMin)
           {
             tMin = t;
-            hit = (AxisLabel)i;
+            hit = (AxisLabel)m_handles[i]->m_params.axis;
           }
         }
       }
@@ -673,6 +679,7 @@ namespace ToolKit
       Update(0.0);
     }
 
+
     MoveGizmo::~MoveGizmo()
     {
     }
@@ -685,6 +692,7 @@ namespace ToolKit
     {
     }
 
+
     GizmoHandle::Params ScaleGizmo::GetParam() const
     {
       GizmoHandle::Params p = LinearGizmo::GetParam();
@@ -693,6 +701,10 @@ namespace ToolKit
 
       return p;
     }
+
+
+    // Polar Gizmo
+    //////////////////////////////////////////////////////////////////////////
 
     PolarGizmo::PolarGizmo()
       : Gizmo({ false, 6.0f, 60.0f })
@@ -711,10 +723,52 @@ namespace ToolKit
     {
     }
 
-    void PolarGizmo::Update(float deltaTime)
+    void PolarGizmo::UpdateGizmo2D()
     {
       GizmoHandle::Params p = GetParam();
 
+      if (m_grabbedAxis == AxisLabel::Z)
+      {
+        p.color = g_selectHighLightPrimaryColor;
+      }
+      else if (IsLocked(AxisLabel::Z))
+      {
+        p.color = g_gizmoLocked;
+      }
+      else if (m_lastHovered == AxisLabel::Z)
+      {
+        p.color = g_selectHighLightSecondaryColor;
+        m_lastHovered = AxisLabel::None;
+      }
+      else
+      {
+        p.color = g_gizmoColor[static_cast<int>(AxisLabel::Z)];
+      }
+      p.axis = AxisLabel::Z;
+
+      if (IsGrabbed(p.axis))
+      {
+        p.grabPnt = m_grabPoint;
+      }
+      else
+      {
+        p.grabPnt = ZERO;
+      }
+
+      m_handles[static_cast<int>(p.axis)]->Generate(p);
+      for (int i = 0; i < 3; i++)
+      {
+        if (i == static_cast<int>(p.axis))
+        {
+          continue;
+        }
+        m_handles[i]->m_mesh = nullptr;
+      }
+    }
+
+    void PolarGizmo::UpdateGizmo3D()
+    {
+      GizmoHandle::Params p = GetParam();
       for (int i = 0; i < 3; i++)
       {
         if (m_grabbedAxis == (AxisLabel)i)
@@ -748,11 +802,30 @@ namespace ToolKit
 
         m_handles[i]->Generate(p);
       }
+    }
+
+    void PolarGizmo::Update(float deltaTime)
+    {
+      EditorViewport2d* viewport2D = dynamic_cast<EditorViewport2d*>
+      (
+        g_app->GetActiveViewport()
+      );
+      if (viewport2D)
+      {
+        UpdateGizmo2D();
+      }
+      else
+      {
+        UpdateGizmo3D();
+      }
 
       MeshPtr mesh = std::make_shared<Mesh>();
       for (int i = 0; i < m_handles.size(); i++)
       {
-        mesh->m_subMeshes.push_back(m_handles[i]->m_mesh);
+        if (m_handles[i]->m_mesh)
+        {
+          mesh->m_subMeshes.push_back(m_handles[i]->m_mesh);
+        }
       }
 
       SetMesh(mesh);
@@ -778,6 +851,9 @@ namespace ToolKit
       glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
       renderer->Render(this, cam);
     }
+
+    // SpotLightGizmo
+    ////////////////////////////////////////////////////////////////////
 
     SpotLightGizmo::SpotLightGizmo(SpotLight* light)
     {

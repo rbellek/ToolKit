@@ -244,26 +244,22 @@ namespace ToolKit
           Vec3 p = m_gizmo->m_worldLocation;
           Vec3 axis = GetGrabbedAxis(0);
 
-          if (PolarGizmo* pg = dynamic_cast<PolarGizmo*> (m_gizmo))
+          if (EditorViewport* vp = g_app->GetActiveViewport())
           {
-            if (EditorViewport* vp = g_app->GetActiveViewport())
+            float t;
+            PlaneEquation axisPlane = PlaneFrom(p, axis);
+            Ray ray = vp->RayFromMousePosition();
+            if (LinePlaneIntersection(ray, axisPlane, t))
             {
-              float t;
-              PlaneEquation axisPlane = PlaneFrom(p, axis);
-              Ray ray = vp->RayFromMousePosition();
-              if (LinePlaneIntersection(ray, axisPlane, t))
-              {
-                Vec3 intersectPnt = PointOnRay(ray, t);
-                intersectPnt = glm::normalize(intersectPnt - p);
-                pg->m_grabPoint = intersectPnt;
+              Vec3 intersectPnt = PointOnRay(ray, t);
+              intersectPnt = glm::normalize(intersectPnt - p);
+              pg->m_grabPoint = intersectPnt;
 
-                m_intersectionPlane = PlaneFrom(intersectPnt + m_gizmo->m_worldLocation, axis);
-              }
+              m_intersectionPlane = PlaneFrom
+              (
+               intersectPnt + m_gizmo->m_worldLocation, axis
+              );
             }
-          }
-          else
-          {
-            m_gizmo->m_grabPoint = axis;
           }
         }
       }
@@ -458,6 +454,8 @@ namespace ToolKit
       float t;
       EditorViewport* vp = g_app->GetActiveViewport();
       Ray ray = vp->RayFromScreenSpacePoint(m_mouseData[1]);
+      
+
       if (LinePlaneIntersection(ray, m_intersectionPlane, t))
       {
         // This point.
@@ -586,10 +584,24 @@ namespace ToolKit
 
     void StateTransformTo::Rotate(Entity* ntt)
     {
-      PolarGizmo* pg = static_cast<PolarGizmo*> (m_gizmo);
       int axisInd = (int)m_gizmo->GetGrabbedAxis();
+      PolarGizmo* pg = static_cast<PolarGizmo*>(m_gizmo);
+      EditorViewport* viewport = g_app->GetActiveViewport();
+      
       Vec3 projAxis = pg->m_handles[axisInd]->m_tangentDir;
-      float delta = glm::dot(projAxis, m_delta);
+      Vec3 mouseDelta = m_delta;
+
+      float delta = glm::dot(projAxis, mouseDelta);
+      Vec3 deltaInWS = Vec3(delta, 0.0f, 0.0f);
+      Vec2 deltaInSS = viewport->TransformWorldSpaceToScreenSpace(deltaInWS);
+      deltaInSS -= viewport->TransformWorldSpaceToScreenSpace(Vec3(0));
+      deltaInSS = Vec2
+      (
+        deltaInSS.x / viewport->m_width,
+        deltaInSS.y / viewport->m_height
+      );
+      delta = glm::length(deltaInSS) * ((delta > 0.0f) ? 1 : -1);
+      delta = glm::degrees(delta) / 9.0f;
 
       m_deltaAccum.x += delta;
       float spacing = glm::radians(g_app->m_rotateDelta);
@@ -602,8 +614,10 @@ namespace ToolKit
 
         delta = glm::round(m_deltaAccum.x / spacing) * spacing;
       }
+      
 
       m_deltaAccum.x = 0.0f;
+      
       if (glm::notEqual(delta, 0.0f))
       {
         Quaternion rotation = glm::angleAxis(delta, m_gizmo->m_normalVectors[axisInd]);
@@ -613,7 +627,10 @@ namespace ToolKit
 
     void StateTransformTo::Scale(Entity* ntt)
     {
-      float delta = glm::length(m_delta);
+      int axisIndx = (int)m_gizmo->GetGrabbedAxis();
+      Vec3 aabbSize = ntt->GetAABB().max - ntt->GetAABB().min;
+      aabbSize *= AXIS[axisIndx];
+      float delta = glm::length(m_delta) / glm::length(aabbSize);
       m_deltaAccum.x += delta;
 
       float spacing = g_app->m_scaleDelta;
@@ -629,9 +646,15 @@ namespace ToolKit
       m_deltaAccum.x = 0;
 
       // Transfer world space delta to local axis.
-      int axisIndx = (int)m_gizmo->GetGrabbedAxis();
       Vec3 target = AXIS[axisIndx] * delta;
-      target *= glm::sign(glm::dot(m_delta, m_gizmo->m_normalVectors[axisIndx]));
+      target *= glm::sign
+      (
+        glm::dot
+        (
+          m_delta,
+          m_gizmo->m_normalVectors[axisIndx]
+        )
+      );
 
       Vec3 scale = ntt->m_node->GetScale() + target;
 

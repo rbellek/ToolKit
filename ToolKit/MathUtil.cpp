@@ -503,6 +503,14 @@ namespace ToolKit
     return ray.position + ray.direction * t;
   }
 
+  //https://forum.unity.com/threads/how-do-i-find-the-closest-point-on-a-line.340058/
+  TK_API Vec3 ProjectPointOnLine(const Ray& baseLine, const Vec3& point)
+  {
+    Vec3 v = point - baseLine.position;
+    float d = dot(v, baseLine.direction);
+    return baseLine.position + (baseLine.direction * d);
+  }
+
   // http://www.cs.otago.ac.nz/postgrads/alexis/planeExtraction.pdf
   void NormalizePlaneEquation(PlaneEquation& plane)
   {

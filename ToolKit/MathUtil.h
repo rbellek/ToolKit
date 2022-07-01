@@ -96,6 +96,7 @@ namespace ToolKit
   TK_API PlaneEquation PlaneFrom(Vec3 point, Vec3 normal);
   TK_API float SignedDistance(const PlaneEquation& plane, const Vec3& pnt);
   TK_API Vec3 ProjectPointOntoPlane(const PlaneEquation& plane, const Vec3& pnt);
+  TK_API Vec3 ProjectPointOntoLine(const Ray& ray, const Vec3& pnt);
 
   // Conversions and Interpolation
   //////////////////////////////////////////

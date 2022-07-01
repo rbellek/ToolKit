@@ -102,6 +102,12 @@ namespace ToolKit
         return;
       }
 
+      // Resize Grid
+      g_app->m_2dGrid->Resize(
+        m_gridWholeSize,
+        AxisLabel::XY, 0.25f * (1.0f / m_gridCellSizeByPixel),
+        100.0f);
+
       PanZoom(deltaTime);
     }
 
@@ -426,8 +432,7 @@ namespace ToolKit
         {
           if (m_zoomPercentage == 800)
           {
-            GetLogger()->WriteConsole(LogType::Warning,
-              "2DViewport's max zoom level is 800!");
+            g_app->m_statusMsg = "Zoom maxed";
             return;
           }
           if (m_zoomPercentage >= 100)
@@ -451,8 +456,7 @@ namespace ToolKit
           }
           else
           {
-            GetLogger()->WriteConsole(LogType::Warning,
-              "2DViewport's min zoom level is 12.5!");
+            g_app->m_statusMsg = "Zoom minimized";
           }
         }
       }
@@ -494,9 +498,6 @@ namespace ToolKit
       Camera* cam = GetCamera();
       if (cam)
       {
-        g_app->m_2dGrid->Resize(
-          m_gridWholeSize,
-          AxisLabel::XY, 0.25f * (1.0f / m_gridCellSizeByPixel));
         // Adjust zoom always.
         if (m_mouseOverContentArea)
         {

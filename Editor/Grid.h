@@ -2,6 +2,7 @@
 
 #include "Drawable.h"
 #include "MathUtil.h"
+#include <Types.h>
 
 namespace ToolKit
 {
@@ -11,8 +12,12 @@ namespace ToolKit
     {
      public:
       explicit Grid(UVec2 size);
-      void Resize(UVec2 size, AxisLabel axis = AxisLabel::ZX,
-        float gridSpaceScale = 1.0f);
+      void Resize(
+        UVec2 size,
+        AxisLabel axis = AxisLabel::ZX,
+        float gridSpaceScale = 1.0f,
+        float mainAxisScale = 1.0f
+      );
       bool HitTest(const Ray& ray, Vec3& pos);
 
      public:

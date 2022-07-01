@@ -3,8 +3,6 @@
 #include "ToolKit.h"
 #include "Primative.h"
 #include "DebugNew.h"
-#include <glm/detail/_swizzle.hpp>
-#include <glm/detail/_swizzle_func.hpp>
 
 namespace ToolKit
 {
@@ -38,34 +36,74 @@ namespace ToolKit
       Resize(size);
     }
 
-    void Grid::Resize(UVec2 size, AxisLabel axis, float gridSpaceScale)
+    ToolKit::Vec3 getColorOfAxis(unsigned char axisIndex, AxisLabel axisCombin)
     {
-      m_size.x = size.x % 2 == 0 ? size.x : size.x + 1;
-      m_size.y = size.y % 2 == 0 ? size.y : size.y + 1;
-
-      bool axises[3] = { false, false, false };
-      if (axis != AxisLabel::XY &&
-        axis != AxisLabel::YZ &&
-        axis != AxisLabel::ZX)
+      // Choose axis color
+      if (axisIndex == 0)
       {
-        GetLogger()->WriteConsole(LogType::Error,
-          "Grid::Resize has invalid x,y,z info; please report this!"); return;
+        // Set axis colors
+        switch (axisCombin)
+        {
+          case AxisLabel::XY:
+          return g_gridAxisGreen;
+          break;
+          case AxisLabel::YZ:
+          return g_gridAxisBlue;
+          break;
+          case AxisLabel::ZX:
+          return g_gridAxisBlue;
+          break;
+        }
       }
       else
       {
-        if (axis == AxisLabel::XY)
+        // Set axis colors
+        switch (axisCombin)
         {
-          axises[0] = true; axises[1] = true;
-        }
-        if (axis == AxisLabel::YZ)
-        {
-          axises[1] = true; axises[2] = true;
-        }
-        if (axis == AxisLabel::ZX)
-        {
-          axises[0] = true; axises[2] = true;
+          case AxisLabel::XY:
+          return g_gridAxisRed;
+          break;
+          case AxisLabel::YZ:
+          return g_gridAxisGreen;
+          break;
+          case AxisLabel::ZX:
+          return g_gridAxisRed;
+          break;
         }
       }
+    }
+
+    void Grid::Resize(
+      UVec2 size,
+      AxisLabel axis,
+      float gridSpaceScale,
+      float mainAxisScale)
+    {
+      // size should be an even number
+      for (uint8_t i = 0; i < 2; i++)
+      {
+        m_size[i] = size[i] % 2 == 0 ? size[i] : size[i] + 1;
+      }
+
+      bool axes[3] = { false, false, false };
+      switch (axis)
+      {
+        case AxisLabel::XY:
+        axes[0] = true; axes[1] = true;
+        break;
+        case AxisLabel::YZ:
+        axes[1] = true; axes[2] = true;
+        break;
+        case AxisLabel::ZX:
+        axes[0] = true; axes[2] = true;
+        break;
+        default:
+        GetLogger()->WriteConsole(
+          LogType::Error,
+          "Grid::Resize has invalid x,y,z info; please report this!");
+        return;
+      }
+
       MeshPtr& parentMesh = GetMesh();
       parentMesh->UnInit();
       glm::vec2 scale = glm::vec2(m_size) * glm::vec2(0.5f);
@@ -85,17 +123,19 @@ namespace ToolKit
         for (int j = 0; j < 4; j++)
         {
           ToolKit::Vertex& clientVertex = mesh->m_clientSideVertices[j];
-          clientVertex.pos = (clientVertex.pos
-            * glm::vec3(scale.x, scale.y, 0.0f)).xzy + offsets[i];
+          clientVertex.pos = 
+          (
+            clientVertex.pos * glm::vec3(scale.x, scale.y, 0.0f)
+          ).xzy + offsets[i];
           clientVertex.tex = clientVertex.pos.xz * gridSpaceScale;
 
 
-          // Convert according to new axises
+          // Convert according to new axes
           Vec3 prevVertex = clientVertex.pos;
           bool isFirstOnePicked = false;
           for (uint8_t axisIndex = 0; axisIndex < 3; axisIndex++)
           {
-            if (axises[axisIndex] == false)
+            if (axes[axisIndex] == false)
             {
               clientVertex.pos[axisIndex] = prevVertex.y;
             }
@@ -126,9 +166,9 @@ namespace ToolKit
       vertices.resize(2);
 
       // x - z lines.
-      Vec3 ls_es[2] = {
-        Vec3(0.05f, scale.x * 2.0f, 1.0f),
-        Vec3(scale.y * 2.0f, 0.05f, 1.0f)
+      Vec3 lines[2] = {
+        Vec3(mainAxisScale / 20.0f, scale.y * 2.0f, 2.0f),
+        Vec3(scale.x * 2.0f, mainAxisScale / 20.0f, 2.0f)
       };
       for (int i = 0; i < 2; i++)
       {
@@ -136,41 +176,9 @@ namespace ToolKit
           GetCopyOfUnlitColorMaterial();
         solidMat->GetRenderState()->cullMode = CullingType::TwoSided;
         solidMat->m_color = g_gridAxisBlue;
-        Vec3 ls = ls_es[i];
+        Vec3 ls = lines[i];
 
-        // Choose axis color
-        if (i == 0)
-        {
-          // Set axis colors
-          switch (axis)
-          {
-            case AxisLabel::XY:
-            solidMat->m_color = g_gridAxisGreen;
-            break;
-            case AxisLabel::YZ:
-            solidMat->m_color = g_gridAxisBlue;
-            break;
-            case AxisLabel::ZX:
-            solidMat->m_color = g_gridAxisBlue;
-            break;
-          }
-        }
-        else
-        {
-          // Set axis colors
-          switch (axis)
-          {
-            case AxisLabel::XY:
-            solidMat->m_color = g_gridAxisRed;
-            break;
-            case AxisLabel::YZ:
-            solidMat->m_color = g_gridAxisGreen;
-            break;
-            case AxisLabel::ZX:
-            solidMat->m_color = g_gridAxisRed;
-            break;
-          }
-        }
+        solidMat->m_color = getColorOfAxis(i, axis);
 
         Quad quad;
         MeshPtr& mesh = quad.GetMesh();
@@ -179,12 +187,12 @@ namespace ToolKit
           Vertex& clientVertex = mesh->m_clientSideVertices[j];
           clientVertex.pos = (clientVertex.pos * ls).xzy;
 
-          // Convert according to new axises
+          // Convert according to new axes
           Vec3 prevVertex = clientVertex.pos;
           bool isFirstOnePicked = false;
           for (uint8_t axisIndex = 0; axisIndex < 3; axisIndex++)
           {
-            if (axises[axisIndex] == false)
+            if (axes[axisIndex] == false)
             {
               clientVertex.pos[axisIndex] = prevVertex.y;
             }
@@ -203,24 +211,6 @@ namespace ToolKit
         parentMesh->m_subMeshes.push_back(mesh);
       }
 
-      // Set axis colors
-      switch (axis)
-      {
-        case AxisLabel::XY:
-        parentMesh->m_subMeshes[0]->m_material->m_color = g_gridAxisRed;
-        parentMesh->m_subMeshes[1]->m_material->m_color = g_gridAxisGreen;
-        break;
-        case AxisLabel::YZ:
-        parentMesh->m_subMeshes[0]->m_material->m_color = g_gridAxisGreen;
-        parentMesh->m_subMeshes[1]->m_material->m_color = g_gridAxisBlue;
-        break;
-        case AxisLabel::ZX:
-        parentMesh->m_subMeshes[0]->m_material->m_color = g_gridAxisBlue;
-        parentMesh->m_subMeshes[1]->m_material->m_color = g_gridAxisRed;
-        break;
-        default:
-        break;
-      }
 
       parentMesh->CalculateAABB();
     }
