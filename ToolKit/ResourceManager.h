@@ -47,10 +47,10 @@ namespace ToolKit
       if (!Exist(file))
       {
         std::shared_ptr<T> resource = std::static_pointer_cast<T> (CreateLocal(T::GetTypeStatic()));
-        if (!CheckFile(file) && CheckFileFromPak(file))
+        if (!CheckFile(file))
         {
           String def = GetDefaultResource(T::GetTypeStatic());
-          if (!CheckFile(def) && !CheckFileFromPak(file))
+          if (!CheckFile(def))
           {
             assert(0 && "No default resource !");
             return nullptr;
