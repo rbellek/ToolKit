@@ -586,19 +586,46 @@ namespace ToolKit
   void ParameterBlock::GetCategories
   (
     VariantCategoryArray& categories,
-    bool sortDesc
+    bool sortDesc,
+    bool filterByExpose
   )
   {
     categories.clear();
+
+    std::unordered_map<String, bool> containsExposedVar;
     std::unordered_map<String, bool> isCategoryAdded;
     for (const ParameterVariant& var : m_variants)
     {
       const String& name = var.m_category.Name;
+      if (var.m_exposed == true)
+      {
+        containsExposedVar[name] = true;
+      }
+
       if (isCategoryAdded.find(name) == isCategoryAdded.end())
       {
         isCategoryAdded[name] = true;
         categories.push_back(var.m_category);
       }
+    }
+
+    if (filterByExpose)
+    {
+      categories.erase
+      (
+        std::remove_if
+        (
+          categories.begin(),
+          categories.end(),
+          [&containsExposedVar](const VariantCategory& vc) -> bool
+          {
+            // remove if not contains exposed var.
+            return containsExposedVar.find(vc.Name) == 
+              containsExposedVar.end();
+          }
+        ),
+        categories.end()
+      );
     }
 
     std::sort

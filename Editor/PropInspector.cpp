@@ -454,7 +454,7 @@ namespace ToolKit
     void EntityView::ShowParameterBlock(ParameterBlock& params, ULongID id)
     {
       VariantCategoryArray categories;
-      params.GetCategories(categories, true);
+      params.GetCategories(categories, true, true);
 
       for (VariantCategory& category : categories)
       {
@@ -1115,11 +1115,11 @@ namespace ToolKit
 
           ImGui::EndTable();
 
-          const char* text = "Update Size By Texture";
-          if (ImGui::Button(text))
+          if (UI::BeginCenteredTextButton("Update Size By Texture"))
           {
             entry->UpdateGeometry(true);
           }
+          UI::EndCenteredTextButton();
 
           // Show additions.
           ShowButton();

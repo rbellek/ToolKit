@@ -11,7 +11,10 @@ namespace ToolKit
 {
   Surface::Surface()
   {
-    AddComponent(new MeshComponent());
+    MeshComponent* mesh = new MeshComponent();
+    mesh->m_localData[mesh->MeshIndex()].m_exposed = false;
+
+    AddComponent(mesh);
 
     MaterialPtr mat = GetMaterialManager()->GetCopyOfUnlitMaterial();
     mat->UnInit();

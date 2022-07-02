@@ -12,10 +12,10 @@
 #include "Serialize.h"
 
 /**
-* @def TKDeclareParam(Class, Name) Auto generated code for declaring accessing
-* local data for container Class.
+* @def TKDeclareParam(Class, Name) Auto generates the code for accessing and 
+* serialization of local data in the container Class.
 * Any class which needs managed ParameterBlocks must declare
-* ParameterBlock m_localData object. For each ParameterVariant, this macro
+* ParameterBlock m_localData member. For each ParameterVariant, this macro
 * can be utilized to generate access methods for the corresponding
 * ParameterVariant.
 * @param Class One of the supported types by ParameterVariant.
@@ -41,7 +41,8 @@
   } \
   public: inline const Class& Name##C() const { \
     return m_localData[Name##_Index].GetCVar<Class>(); \
-  }
+  } \
+  public: inline size_t Name##Index() { return Name##_Index; }
 
 namespace ToolKit
 {
@@ -444,8 +445,15 @@ namespace ToolKit
     * descending order by request.
     * @param categories An array to return unique categories.
     * @param sortDesc Sorts the categories by priority in descending order.
+    * @param filterByExpose Filters out categories which does not contains any
+    * exposed Variants.
     */
-    void GetCategories(VariantCategoryArray& categories, bool sortDesc);
+    void GetCategories
+    (
+      VariantCategoryArray& categories,
+      bool sortDesc,
+      bool filterByExpose
+    );
 
     /**
     * Collects every variant by the given category.
