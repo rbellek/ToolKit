@@ -13,6 +13,12 @@
 namespace ToolKit
 {
 
+  static VariantCategory SurfaceCategory
+  {
+    "Surface",
+    90
+  };
+
   class TK_API Surface : public Entity
   {
    public:
@@ -33,6 +39,7 @@ namespace ToolKit
     void UpdateGeometry(bool byTexture);
 
    protected:
+    void ParameterConstructor();
     Entity* CopyTo(Entity* copyTo) const override;
 
    private:
@@ -41,8 +48,9 @@ namespace ToolKit
     void SetSizeFromTexture();
 
    public:
-    Vec2 m_size;
-    Vec2 m_pivotOffset;
+    TKDeclareParam(Vec2, Size);
+    TKDeclareParam(Vec2, PivotOffset);
+    TKDeclareParam(MaterialPtr, Material);
 
     // UI states.
     bool m_mouseOver = false;

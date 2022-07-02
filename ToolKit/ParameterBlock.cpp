@@ -57,6 +57,12 @@ namespace ToolKit
   {
     *this = var;
   }
+
+  ParameterVariant::ParameterVariant(const Vec2& var)
+  {
+    *this = var;
+  }
+
   ParameterVariant::ParameterVariant(const Vec3& var)
   {
     *this = var;
@@ -145,6 +151,13 @@ namespace ToolKit
   ParameterVariant& ParameterVariant::operator= (uint var)
   {
     m_type = VariantType::UInt;
+    AsignVal(var);
+    return *this;
+  }
+
+  ParameterVariant& ParameterVariant::operator=(const Vec2& var)
+  {
+    m_type = VariantType::Vec2;
     AsignVal(var);
     return *this;
   }
@@ -304,6 +317,11 @@ namespace ToolKit
         );
       }
       break;
+      case VariantType::Vec2:
+      {
+        WriteVec(node, doc, GetCVar<Vec2>());
+      }
+      break;
       case VariantType::Vec3:
       {
         WriteVec(node, doc, GetCVar<Vec3>());
@@ -432,6 +450,13 @@ namespace ToolKit
         int val(0);
         ReadAttr(parent, XmlParamterValAttr, val);
         m_var = val;
+      }
+      break;
+      case VariantType::Vec2:
+      {
+        Vec2 var;
+        ReadVec(parent, var);
+        m_var = var;
       }
       break;
       case VariantType::Vec3:

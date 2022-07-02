@@ -11,25 +11,14 @@ namespace ToolKit
 {
   Surface::Surface()
   {
-    MeshComponent* mesh = new MeshComponent();
-    mesh->m_localData[mesh->MeshIndex()].m_exposed = false;
-
-    AddComponent(mesh);
-
-    MaterialPtr mat = GetMaterialManager()->GetCopyOfUnlitMaterial();
-    mat->UnInit();
-    mat->GetRenderState()->blendFunction =
-      BlendFunction::SRC_ALPHA_ONE_MINUS_SRC_ALPHA;
-
-    mat->GetRenderState()->depthTestEnabled = true;
-    GetMeshComponent()->Mesh()->m_material = mat;
+    ParameterConstructor();
   }
 
   Surface::Surface(TexturePtr texture, const Vec2& pivotOffset)
     : Surface()
   {
     GetMeshComponent()->Mesh()->m_material->m_diffuseTexture = texture;
-    m_pivotOffset = pivotOffset;
+    PivotOffset() = pivotOffset;
     SetSizeFromTexture();
     CreateQuat();
   }
@@ -48,7 +37,7 @@ namespace ToolKit
     GetMeshComponent()->Mesh()->m_material->m_diffuseTexture =
       GetTextureManager()->Create<Texture>(textureFile);
 
-    m_pivotOffset = pivotOffset;
+    PivotOffset() = pivotOffset;
     SetSizeFromTexture();
     CreateQuat();
   }
@@ -56,8 +45,8 @@ namespace ToolKit
   Surface::Surface(const Vec2& size, const Vec2& offset)
     : Surface()
   {
-    m_size = size;
-    m_pivotOffset = offset;
+    Size() = size;
+    PivotOffset() = offset;
     CreateQuat();
   }
 
@@ -73,42 +62,12 @@ namespace ToolKit
   void Surface::Serialize(XmlDocument* doc, XmlNode* parent) const
   {
     Entity::Serialize(doc, parent);
-    XmlNode* nttNode = parent->last_node();
-    XmlNode* prop = doc->allocate_node
-    (
-      rapidxml::node_type::node_element,
-      "Size"
-    );
-    nttNode->append_node(prop);
-    WriteVec(prop, doc, m_size);
-
-    prop = doc->allocate_node
-    (
-      rapidxml::node_type::node_element,
-      "Offset"
-    );
-    nttNode->append_node(prop);
-    WriteVec(prop, doc, m_pivotOffset);
-
-    MeshPtr mesh = GetComponent<MeshComponent>()->Mesh();
-    String matFile = mesh->m_material->GetFile();
-    if (matFile.empty())
-    {
-      mesh->m_material->m_name = NameC();
-    }
-    mesh->m_material->Save(true);
-    WriteMaterial(nttNode, doc, matFile);
   }
 
   void Surface::DeSerialize(XmlDocument* doc, XmlNode* parent)
   {
     Entity::DeSerialize(doc, parent);
-    XmlNode* prop = parent->first_node("Size");
-    ReadVec<Vec2>(prop, m_size);
-    prop = parent->first_node("Offset");
-    ReadVec<Vec2>(prop, m_pivotOffset);
     CreateQuat();
-    GetMeshComponent()->Mesh()->m_material = ReadMaterial(parent);
   }
 
   void Surface::UpdateGeometry(bool byTexture)
@@ -124,13 +83,50 @@ namespace ToolKit
     mesh->Init();
   }
 
+  void Surface::ParameterConstructor()
+  {
+    MeshComponent* mesh = new MeshComponent();
+    mesh->m_localData[mesh->MeshIndex()].m_exposed = false;
+    AddComponent(mesh);
+
+    Size_Define
+    (
+      { 150.0f, 50.0f },
+      SurfaceCategory.Name,
+      SurfaceCategory.Priority,
+      true,
+      true
+    );
+
+    PivotOffset_Define
+    (
+      { 0.5f, 0.5f },
+      SurfaceCategory.Name,
+      SurfaceCategory.Priority,
+      true,
+      true
+    );
+
+    MaterialPtr material = GetMaterialManager()->GetCopyOfUnlitMaterial();
+    material->UnInit();
+    material->GetRenderState()->blendFunction =
+      BlendFunction::SRC_ALPHA_ONE_MINUS_SRC_ALPHA;
+    material->GetRenderState()->depthTestEnabled = true;
+
+    Material_Define
+    (
+      material,
+      SurfaceCategory.Name,
+      SurfaceCategory.Priority,
+      true,
+      true
+    );
+  }
+
   Entity* Surface::CopyTo(Entity* copyTo) const
   {
     Entity::CopyTo(copyTo);
     Surface* cpy = static_cast<Surface*> (copyTo);
-    cpy->m_size = m_size;
-    cpy->m_pivotOffset = m_pivotOffset;
-
     return cpy;
   }
 
@@ -144,10 +140,10 @@ namespace ToolKit
 
   void Surface::CreateQuat()
   {
-    float width = m_size.x;
-    float height = m_size.y;
+    float width = Size().x;
+    float height = Size().y;
     float depth = 0;
-    Vec2 absOffset = Vec2(m_pivotOffset.x * width, m_pivotOffset.y * height);
+    Vec2 absOffset = Vec2(PivotOffset().x * width, PivotOffset().y * height);
 
     VertexArray vertices;
     vertices.resize(6);
@@ -172,6 +168,8 @@ namespace ToolKit
 
   void Surface::CreateQuat(const SpriteEntry& val)
   {
+    assert(false && "Old function needs to be re factored.");
+
     MeshPtr& mesh = GetMeshComponent()->Mesh();
     float imageWidth = static_cast<float>
     (
@@ -255,11 +253,10 @@ namespace ToolKit
 
   void Surface::SetSizeFromTexture()
   {
-    MeshPtr& mesh = GetMeshComponent()->Mesh();
-    m_size =
+    Size() =
     {
-      mesh->m_material->m_diffuseTexture->m_width,
-      mesh->m_material->m_diffuseTexture->m_height
+      Material()->m_diffuseTexture->m_width,
+      Material()->m_diffuseTexture->m_height
     };
   }
 

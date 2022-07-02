@@ -42,6 +42,11 @@ namespace ToolKit
           ImGui::InputInt(var->m_name.c_str(), var->GetVarPtr<int>());
         }
         break;
+        case ParameterVariant::VariantType::Vec2:
+        {
+          ImGui::InputFloat2(var->m_name.c_str(), &var->GetVar<Vec2>()[0]);
+        }
+        break;
         case ParameterVariant::VariantType::Vec3:
         {
           ImGui::InputFloat3(var->m_name.c_str(), &var->GetVar<Vec3>()[0]);
@@ -933,7 +938,6 @@ namespace ToolKit
     {
       m_views.push_back(new EntityView());
       m_views.push_back(new MaterialView());
-      m_views.push_back(new SurfaceView());
     }
 
     PropInspector::~PropInspector()
@@ -961,13 +965,6 @@ namespace ToolKit
           EntityView* ev = GetView<EntityView>();
           ev->m_entity = curr;
           ev->Show();
-
-          if (curr->IsSurfaceInstance())
-          {
-            View* view = GetView<SurfaceView>();
-            view->m_entity = curr;
-            view->Show();
-          }
         }
       }
       ImGui::End();
@@ -1052,146 +1049,6 @@ namespace ToolKit
     void MaterialInspector::DispatchSignals() const
     {
       ModShortCutSignals({ SDL_SCANCODE_DELETE });
-    }
-
-    void SurfaceView::Show()
-    {
-      if (!m_entity->IsSurfaceInstance())
-      {
-        return;
-      }
-
-      Surface* entry = static_cast<Surface*> (m_entity);
-      if (ImGui::CollapsingHeader("Surface", ImGuiTreeNodeFlags_DefaultOpen))
-      {
-        if
-        (
-          ImGui::BeginTable
-          (
-            "##SurfaceProps",
-            2,
-            ImGuiTableFlags_SizingFixedSame
-          )
-        )
-        {
-          ImGui::TableSetupColumn("##size");
-          ImGui::TableSetupColumn
-          (
-            "##offset",
-            ImGuiTableColumnFlags_WidthStretch
-          );
-
-          ImGui::TableNextRow();
-          ImGui::TableNextColumn();
-
-          ImGui::Text("Size: ");
-          ImGui::TableNextColumn();
-
-          ImGui::InputFloat2
-          (
-            "##Size",
-            reinterpret_cast<float*>(&entry->m_size)
-          );
-          if (ImGui::IsItemDeactivatedAfterEdit())
-          {
-            entry->UpdateGeometry(false);
-          }
-
-          ImGui::TableNextRow();
-          ImGui::TableNextColumn();
-
-          ImGui::Text("Offset: ");
-          ImGui::TableNextColumn();
-
-          ImGui::InputFloat2
-          (
-            "##Offset",
-            reinterpret_cast<float*>(&entry->m_pivotOffset)
-          );
-          if (ImGui::IsItemDeactivatedAfterEdit())
-          {
-            entry->UpdateGeometry(false);
-          }
-
-          ImGui::EndTable();
-
-          if (UI::BeginCenteredTextButton("Update Size By Texture"))
-          {
-            entry->UpdateGeometry(true);
-          }
-          UI::EndCenteredTextButton();
-
-          // Show additions.
-          ShowButton();
-        }
-      }
-    }
-
-    void SurfaceView::ShowButton()
-    {
-      if (m_entity->GetType() == EntityType::Entity_Button)
-      {
-        Button* button = dynamic_cast<Button*> (m_entity);
-        ImGui::Text("Button");
-        ImGui::Separator();
-
-        String file = "\\button image.";
-        if (button->m_buttonImage)
-        {
-          file = button->m_buttonImage->GetFile();
-        }
-
-        DropZone
-        (
-          UI::m_imageIcon->m_textureId,
-          file,
-          [this](const DirectoryEntry& dirEnt) -> void
-          {
-            if (m_entity && m_entity->IsDrawable())
-            {
-              if (m_entity->GetType() == EntityType::Entity_Button)
-              {
-                Button* button = dynamic_cast<Button*> (m_entity);
-                TexturePtr texture =
-                GetTextureManager()->Create<Texture>(dirEnt.GetFullPath());
-                texture->Init(false);
-                button->m_buttonImage = texture;
-                button->GetMeshComponent()->Mesh()->
-                  m_material->m_diffuseTexture = texture;
-                button->UpdateGeometry(true);
-              }
-            }
-          },
-          "Button Image:"
-        );
-
-        file = "\\mouse over image.";
-        if (button->m_mouseOverImage)
-        {
-          file = button->m_mouseOverImage->GetFile();
-        }
-
-        DropZone
-        (
-          UI::m_imageIcon->m_textureId,
-          file,
-          [this](const DirectoryEntry& dirEnt) -> void
-          {
-            if (m_entity && m_entity->IsDrawable())
-            {
-              if (m_entity->GetType() == EntityType::Entity_Button)
-              {
-                Button* button = dynamic_cast<Button*> (m_entity);
-                TexturePtr texture =
-                GetTextureManager()->Create<Texture>(dirEnt.GetFullPath());
-                texture->Init(false);
-                button->m_mouseOverImage = texture;
-              }
-            }
-          },
-          "Mouse Hover Image:"
-        );
-      }
     }
 
   }  // namespace Editor

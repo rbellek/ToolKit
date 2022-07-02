@@ -47,15 +47,6 @@ namespace ToolKit
       MaterialPtr m_material;
     };
 
-    class SurfaceView : public View
-    {
-    public:
-      SurfaceView() { m_viewID = 4; }
-      virtual ~SurfaceView() {}
-      virtual void Show() override;
-      void ShowButton();
-    };
-
     class PropInspector : public Window
     {
     public:

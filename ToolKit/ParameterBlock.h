@@ -56,6 +56,7 @@ namespace ToolKit
     float,
     int,
     uint,
+    Vec2,
     Vec3,
     Vec4,
     Mat3,
@@ -122,6 +123,7 @@ namespace ToolKit
     */
     enum class VariantType
     {
+      // Order is important. Don't change it.
       byte,
       ubyte,
       Float,
@@ -135,7 +137,8 @@ namespace ToolKit
       Bool,
       ULongID,
       MeshPtr,
-      MaterialPtr
+      MaterialPtr,
+      Vec2
     };
 
     /**
@@ -177,6 +180,11 @@ namespace ToolKit
     * Constructs uint type variant.
     */
     explicit ParameterVariant(uint var);
+
+    /**
+    * Constructs Vec2 type variant.
+    */
+    explicit ParameterVariant(const Vec2& var);
 
     /**
     * Constructs Vec3 type variant.
@@ -290,6 +298,11 @@ namespace ToolKit
     * Assign a uint to the value of the variant.
     */
     ParameterVariant& operator= (uint var);
+
+    /**
+    * Assign a Vec2 to the value of the variant.
+    */
+    ParameterVariant& operator= (const Vec2& var);
 
     /**
     * Assign a Vec3 to the value of the variant.
