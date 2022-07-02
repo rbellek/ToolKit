@@ -263,8 +263,9 @@ namespace ToolKit
     static ProgramPtr prog = CreateProgram(vertexShader, fragShader);
     BindProgram(prog);
 
-    MeshPtr mesh = object->GetMesh();
+    MeshPtr mesh = object->GetMeshComponent()->Mesh();
     mesh->Init();
+
     RenderState* rs = mesh->m_material->GetRenderState();
     SetRenderState(rs);
 
@@ -278,10 +279,12 @@ namespace ToolKit
       0.0f,
       100.0f
     );
+
     Mat4 mul = pm * object->m_node->GetTransform
     (
       TransformationSpace::TS_WORLD
     );
+
     glUniformMatrix4fv(pvloc, 1, false, reinterpret_cast<float*>(&mul));
 
     glBindBuffer(GL_ARRAY_BUFFER, mesh->m_vboVertexId);

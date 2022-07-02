@@ -56,7 +56,7 @@ namespace ToolKit
       m_cursor = new Cursor();
       m_origin = new Axis3d();
       m_grid = new Grid(100);
-      m_grid->GetMesh()->Init(false);
+      m_grid->GetMeshComponent()->Init(false);
       Generate2dGrid();
 
       // Lights and camera.

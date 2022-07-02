@@ -1156,7 +1156,8 @@ namespace ToolKit
                 GetTextureManager()->Create<Texture>(dirEnt.GetFullPath());
                 texture->Init(false);
                 button->m_buttonImage = texture;
-                button->GetMesh()->m_material->m_diffuseTexture = texture;
+                button->GetMeshComponent()->Mesh()->
+                  m_material->m_diffuseTexture = texture;
                 button->UpdateGeometry(true);
               }
             }

@@ -11,19 +11,21 @@ namespace ToolKit
 {
   Surface::Surface()
   {
+    AddComponent(new MeshComponent());
+
     MaterialPtr mat = GetMaterialManager()->GetCopyOfUnlitMaterial();
     mat->UnInit();
     mat->GetRenderState()->blendFunction =
       BlendFunction::SRC_ALPHA_ONE_MINUS_SRC_ALPHA;
 
     mat->GetRenderState()->depthTestEnabled = true;
-    GetMesh()->m_material = mat;
+    GetMeshComponent()->Mesh()->m_material = mat;
   }
 
   Surface::Surface(TexturePtr texture, const Vec2& pivotOffset)
     : Surface()
   {
-    GetMesh()->m_material->m_diffuseTexture = texture;
+    GetMeshComponent()->Mesh()->m_material->m_diffuseTexture = texture;
     m_pivotOffset = pivotOffset;
     SetSizeFromTexture();
     CreateQuat();
@@ -32,7 +34,7 @@ namespace ToolKit
   Surface::Surface(TexturePtr texture, const SpriteEntry& entry)
     : Surface()
   {
-    GetMesh()->m_material->m_diffuseTexture = texture;
+    GetMeshComponent()->Mesh()->m_material->m_diffuseTexture = texture;
     SetSizeFromTexture();
     CreateQuat(entry);
   }
@@ -40,7 +42,7 @@ namespace ToolKit
   Surface::Surface(const String& textureFile, const Vec2& pivotOffset)
     : Surface()
   {
-    GetMesh()->m_material->m_diffuseTexture =
+    GetMeshComponent()->Mesh()->m_material->m_diffuseTexture =
       GetTextureManager()->Create<Texture>(textureFile);
 
     m_pivotOffset = pivotOffset;
@@ -85,7 +87,7 @@ namespace ToolKit
     nttNode->append_node(prop);
     WriteVec(prop, doc, m_pivotOffset);
 
-    MeshPtr mesh = GetMesh();
+    MeshPtr mesh = GetComponent<MeshComponent>()->Mesh();
     String matFile = mesh->m_material->GetFile();
     if (matFile.empty())
     {
@@ -103,7 +105,7 @@ namespace ToolKit
     prop = parent->first_node("Offset");
     ReadVec<Vec2>(prop, m_pivotOffset);
     CreateQuat();
-    GetMesh()->m_material = ReadMaterial(parent);
+    GetMeshComponent()->Mesh()->m_material = ReadMaterial(parent);
   }
 
   void Surface::UpdateGeometry(bool byTexture)
@@ -113,7 +115,7 @@ namespace ToolKit
       SetSizeFromTexture();
     }
 
-    MeshPtr mesh = GetMesh();
+    MeshPtr mesh = GetMeshComponent()->Mesh();
     mesh->UnInit();
     CreateQuat();
     mesh->Init();
@@ -121,7 +123,7 @@ namespace ToolKit
 
   Entity* Surface::CopyTo(Entity* copyTo) const
   {
-    Drawable::CopyTo(copyTo);
+    Entity::CopyTo(copyTo);
     Surface* cpy = static_cast<Surface*> (copyTo);
     cpy->m_size = m_size;
     cpy->m_pivotOffset = m_pivotOffset;
@@ -160,14 +162,14 @@ namespace ToolKit
     vertices[5].pos = Vec3(-absOffset.x, height - absOffset.y, depth);
     vertices[5].tex = Vec2(0.0f, 0.0f);
 
-    MeshPtr mesh = GetMesh();
+    MeshPtr mesh = GetMeshComponent()->Mesh();
     mesh->m_clientSideVertices = vertices;
     mesh->CalculateAABB();
   }
 
   void Surface::CreateQuat(const SpriteEntry& val)
   {
-    MeshPtr& mesh = GetMesh();
+    MeshPtr& mesh = GetMeshComponent()->Mesh();
     float imageWidth = static_cast<float>
     (
       mesh->m_material->m_diffuseTexture->m_width
@@ -250,7 +252,7 @@ namespace ToolKit
 
   void Surface::SetSizeFromTexture()
   {
-    MeshPtr& mesh = GetMesh();
+    MeshPtr& mesh = GetMeshComponent()->Mesh();
     m_size =
     {
       mesh->m_material->m_diffuseTexture->m_width,
@@ -361,13 +363,15 @@ namespace ToolKit
 
     m_onMouseEnterLocal = [this](Event* e, Entity* ntt) -> void
     {
-      GetMesh()->m_material->m_diffuseTexture = m_mouseOverImage;
+      GetMeshComponent()->Mesh()->
+        m_material->m_diffuseTexture = m_mouseOverImage;
     };
     m_onMouseEnter = m_onMouseEnterLocal;
 
     m_onMouseExitLocal = [this](Event* e, Entity* ntt) -> void
     {
-      GetMesh()->m_material->m_diffuseTexture = m_buttonImage;
+      GetMeshComponent()->Mesh()->
+        m_material->m_diffuseTexture = m_buttonImage;
     };
     m_onMouseExit = m_onMouseExitLocal;
   }

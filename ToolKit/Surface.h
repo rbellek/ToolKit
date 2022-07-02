@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 
-#include "Drawable.h"
+#include "Entity.h"
 #include "MathUtil.h"
 #include "Resource.h"
 #include "Events.h"
@@ -13,7 +13,7 @@
 namespace ToolKit
 {
 
-  class TK_API Surface : public Drawable
+  class TK_API Surface : public Entity
   {
    public:
     Surface();

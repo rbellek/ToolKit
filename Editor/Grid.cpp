@@ -11,6 +11,8 @@ namespace ToolKit
 
     Grid::Grid(uint size)
     {
+      AddComponent(new MeshComponent());
+
       // Create grid material.
       if (!GetMaterialManager()->Exist(g_gridMaterialName))
       {
@@ -35,7 +37,7 @@ namespace ToolKit
 
     void Grid::Resize(uint size, float gridSpaceScale)
     {
-      MeshPtr& parentMesh = GetMesh();
+      MeshPtr& parentMesh = GetMeshComponent()->Mesh();
       parentMesh->UnInit();
       float scale = (float)m_size * 0.5f;
 
@@ -60,7 +62,7 @@ namespace ToolKit
         mesh->m_material = m_material;
         if (i == 0)
         {
-          SetMesh(mesh);
+          GetMeshComponent()->Mesh() = mesh;
         }
         else
         {

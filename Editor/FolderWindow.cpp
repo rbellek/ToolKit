@@ -171,7 +171,7 @@ namespace ToolKit
         float h = (texture->m_height / maxDim) * thumbSize.y;
 
         Surface surface(Vec2(w, h));
-        MeshPtr& mesh = surface.GetMesh();
+        MeshPtr& mesh = surface.GetMeshComponent()->Mesh();
         mesh->m_material->m_diffuseTexture = texture;
         mesh->Init(false);
 
