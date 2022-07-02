@@ -237,7 +237,7 @@ namespace ToolKit
         return;
       }
 
-      ShowParameterBlock(m_entity->m_localData);
+      ShowParameterBlock(m_entity->m_localData, m_entity->Id());
 
       // Missing data reporter.
       if (m_entity->IsDrawable())
@@ -382,7 +382,7 @@ namespace ToolKit
 
         BoundingBox bb = m_entity->GetAABB(true);
         Vec3 dim = bb.max - bb.min;
-        ImGui::Text("Bounding box dimentions:");
+        ImGui::Text("Bounding box dimensions:");
         ImGui::Text("x: %.2f", dim.x);
         ImGui::SameLine();
         ImGui::Text("\ty: %.2f", dim.y);
@@ -392,13 +392,66 @@ namespace ToolKit
 
       ShowCustomData();
 
-      for (ComponentPtr& com : m_entity->m_components)
+      if
+      (
+        ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen)
+      )
       {
-        ShowParameterBlock(com->m_localData);
+        ImGui::Indent(8.0f);
+        for (ComponentPtr& com : m_entity->m_components)
+        {
+          ShowParameterBlock(com->m_localData, com->m_id);
+        }
+
+        ImGui::PushItemWidth(150);
+        static bool addInAction = false;
+        if (addInAction)
+        {
+          int dataType = 0;
+          if
+          (
+            ImGui::Combo
+            (
+              "##NewComponent",
+              &dataType,
+              "...\0Mesh Component\0Material Component"
+            )
+          )
+          {
+            Component* newComponent = nullptr;
+            switch (dataType)
+            {
+            case 1:
+              newComponent = new MeshComponent();
+              break;
+            case 2:
+              newComponent = new MaterialComponent;
+              break;
+            default:
+              break;
+            }
+
+            if (newComponent)
+            {
+              m_entity->AddComponent(newComponent);
+              addInAction = false;
+            }
+          }
+        }
+        ImGui::PopItemWidth();
+
+        ImGui::Separator();
+        if (UI::BeginCenteredTextButton("Add Component"))
+        {
+          addInAction = true;
+        }
+        UI::EndCenteredTextButton();
+
+        ImGui::Unindent(8.0f);
       }
     }
 
-    void EntityView::ShowParameterBlock(ParameterBlock& params)
+    void EntityView::ShowParameterBlock(ParameterBlock& params, ULongID id)
     {
       VariantCategoryArray categories;
       params.GetCategories(categories, true);
@@ -410,11 +463,12 @@ namespace ToolKit
           continue;
         }
 
+        String varName = category.Name + "##" + std::to_string(id);
         if
         (
           ImGui::CollapsingHeader
           (
-            category.Name.c_str(),
+            varName.c_str(),
             ImGuiTreeNodeFlags_DefaultOpen
           )
         )
@@ -591,8 +645,9 @@ namespace ToolKit
               (
                 "##NewCustData",
                 &dataType,
-                "...\0String\0Boolean\0Int\0Float\0Vec3\0Vec4\0Mat3\0Mat4")
+                "...\0String\0Boolean\0Int\0Float\0Vec3\0Vec4\0Mat3\0Mat4"
               )
+            )
             {
               ParameterVariant customVar;
               // This makes them only visible in Custom Data dropdown.
@@ -641,72 +696,12 @@ namespace ToolKit
           }
           ImGui::PopItemWidth();
 
-          Vec2 min = ImGui::GetWindowContentRegionMin();
-          Vec2 max = ImGui::GetWindowContentRegionMax();
-          Vec2 size = max - min;
-
-          ImGui::AlignTextToFramePadding();
-          ImVec2 tsize = ImGui::CalcTextSize("Add Custom Data");
-          float offset = (size.x - tsize.x) * 0.5f;
-          ImGui::Indent(offset);
-
-          if (ImGui::Button("Add Custom Data"))
+          if (UI::BeginCenteredTextButton("Add Custom Data"))
           {
             addInAction = true;
           }
-
-          ImGui::Indent(-offset);
+          UI::EndCenteredTextButton();
         }
-      }
-    }
-
-    // MeshView
-    //////////////////////////////////////////////////////////////////////////
-
-    void MeshView::Show()
-    {
-      MeshPtr& entry = static_cast<Drawable*> (m_entity)->GetMesh();
-      if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
-      {
-        if (ImGui::BeginTable("##MeshStats", 2))
-        {
-          ImGui::TableNextRow();
-          ImGui::TableNextColumn();
-
-          ImGui::Text("Face count:");
-          ImGui::TableNextColumn();
-          ImGui::Text("%d", (uint)entry->m_faces.size());
-
-          ImGui::TableNextRow();
-          ImGui::TableNextColumn();
-
-          ImGui::Text("Vertex count:");
-          ImGui::TableNextColumn();
-          ImGui::Text("%d", (uint)entry->m_clientSideVertices.size());
-
-          ImGui::EndTable();
-        }
-
-        DropSubZone
-        (
-          "Mesh##" + std::to_string(entry->m_id),
-          UI::m_meshIcon->m_textureId,
-          entry->GetFile(),
-          [this](const DirectoryEntry& dirEnt) -> void
-          {
-            if (m_entity && m_entity->IsDrawable())
-            {
-              Drawable* dw = static_cast<Drawable*> (m_entity);
-              dw->SetMesh
-              (
-                GetResourceManager(ResourceType::Mesh)->Create<Mesh>
-                (
-                  dirEnt.GetFullPath()
-                )
-              );
-            }
-          }
-        );
       }
     }
 
@@ -742,7 +737,7 @@ namespace ToolKit
       if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
       {
         Vec4 col = Vec4(entry->m_color, entry->m_alpha);
-        if (ImGui::ColorEdit4("MatColor##1", &col.x))
+        if (ImGui::ColorEdit4("Material Color##1", &col.x, ImGuiColorEditFlags_NoLabel))
         {
           entry->m_color = col.xyz;
           entry->m_alpha = col.a;
@@ -938,7 +933,6 @@ namespace ToolKit
     {
       m_views.push_back(new EntityView());
       m_views.push_back(new MaterialView());
-      m_views.push_back(new MeshView());
       m_views.push_back(new SurfaceView());
     }
 
@@ -967,17 +961,6 @@ namespace ToolKit
           EntityView* ev = GetView<EntityView>();
           ev->m_entity = curr;
           ev->Show();
-
-          /*if (curr->IsDrawable())
-          {
-            MeshView* mev = GetView<MeshView>();
-            mev->m_entity = curr;
-            mev->Show();
-
-            MaterialView* mav = GetView <MaterialView>();
-            mav->m_entity = curr;
-            mav->Show();
-          }*/
 
           if (curr->IsSurfaceInstance())
           {

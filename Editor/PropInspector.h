@@ -27,21 +27,13 @@ namespace ToolKit
     class EntityView : public View
     {
     public:
-      EntityView() { m_viewID = 1;  }
+      EntityView() { m_viewID = 1; }
       virtual ~EntityView() {}
       virtual void Show();
-      virtual void ShowParameterBlock(ParameterBlock& params);
+      virtual void ShowParameterBlock(ParameterBlock& params, ULongID id);
 
     protected:
       void ShowCustomData();
-    };
-
-    class MeshView : public View
-    {
-    public:
-      MeshView() { m_viewID = 2; }
-      virtual ~MeshView() {}
-      virtual void Show() override;
     };
 
     class MaterialView : public View

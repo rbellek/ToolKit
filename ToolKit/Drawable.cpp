@@ -18,7 +18,6 @@ namespace ToolKit
   Drawable::Drawable()
   {
     AddComponent(new MeshComponent());
-    AddComponent(new MaterialComponent());
   }
 
   Drawable::~Drawable()
