@@ -257,7 +257,7 @@ namespace ToolKit
           if (ImGui::MenuItem("Sphere"))
           {
             Sphere* sphere = new Sphere();
-            sphere->GetMesh()->Init(false);
+            sphere->GetMeshComponent()->Init(false);
             currScene->AddEntity(sphere);
           }
           if (ImGui::MenuItem("Cone"))

@@ -772,8 +772,8 @@ namespace ToolKit
       if (sphere == nullptr)
       {
         sphere = std::make_shared<Sphere>(1.0f);
-        sphere->GetMesh()->m_material->GetRenderState()->cullMode =
-        CullingType::Front;
+        sphere->GetMeshComponent()->Mesh()->
+          m_material->GetRenderState()->cullMode = CullingType::Front;
       }
 
       *sphere->m_node = *m_node;

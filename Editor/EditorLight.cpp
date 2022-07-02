@@ -71,7 +71,7 @@ namespace ToolKit
       std::shared_ptr<Sphere> sphere = std::make_shared<Sphere>(0.1f);
 
       MeshComponent* mc = new MeshComponent();
-      mc->Mesh() = sphere->GetMesh();
+      mc->Mesh() = sphere->GetMeshComponent()->Mesh();
       mc->Mesh()->m_material =
       GetMaterialManager()->GetCopyOfUnlitColorMaterial();
       mc->Mesh()->CalculateAABB();
@@ -82,7 +82,7 @@ namespace ToolKit
       // Directional light gizmo
       for (LineBatch* lb : m_gizmo->GetGizmoLineBatches())
       {
-        MeshPtr mesh = lb->GetComponent<MeshComponent>()->Mesh();
+        MeshPtr mesh = lb->GetMeshComponent()->Mesh();
         mesh->Init();
         mc->Mesh()->m_subMeshes.push_back(mesh);
       }
@@ -165,7 +165,7 @@ namespace ToolKit
       std::shared_ptr<Sphere> sphere = std::make_shared<Sphere>(0.1f);
 
       MeshComponent* mc = new MeshComponent();
-      mc->Mesh() = sphere->GetMesh();
+      mc->Mesh() = sphere->GetMeshComponent()->Mesh();
       mc->Mesh()->m_material =
       GetMaterialManager()->GetCopyOfUnlitColorMaterial();
       mc->Mesh()->CalculateAABB();
@@ -227,7 +227,7 @@ namespace ToolKit
       std::shared_ptr<Sphere> sphere = std::make_shared<Sphere>(0.1f);
 
       MeshComponent* mc = new MeshComponent();
-      mc->Mesh() = sphere->GetMesh();
+      mc->Mesh() = sphere->GetMeshComponent()->Mesh();
       mc->Mesh()->m_material =
       GetMaterialManager()->GetCopyOfUnlitColorMaterial();
       mc->Mesh()->CalculateAABB();

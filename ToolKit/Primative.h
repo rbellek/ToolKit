@@ -83,7 +83,7 @@ namespace ToolKit
     void Generate();
   };
 
-  class TK_API Sphere final : public Drawable
+  class TK_API Sphere final : public Entity
   {
    public:
     Sphere(bool genDef = true);

@@ -105,7 +105,6 @@ namespace ToolKit
 
   Cube::Cube(bool genDef)
   {
-    AddComponent(new MeshComponent());
     ParameterConstructor();
 
     if (genDef)
@@ -116,7 +115,6 @@ namespace ToolKit
 
   Cube::Cube(const Vec3& scale)
   {
-    AddComponent(new MeshComponent());
     ParameterConstructor();
 
     Scale() = scale;
@@ -153,6 +151,7 @@ namespace ToolKit
 
   void Cube::ParameterConstructor()
   {
+    AddComponent(new MeshComponent());
     Scale_Define(Vec3(1.0f), "Geometry", 90, true, true);
   }
 
@@ -407,7 +406,7 @@ namespace ToolKit
 
   Entity* Sphere::CopyTo(Entity* copyTo) const
   {
-    Drawable::CopyTo(copyTo);
+    Entity::CopyTo(copyTo);
     Sphere* ntt = static_cast<Sphere*> (copyTo);
     return ntt;
   }
@@ -477,7 +476,7 @@ namespace ToolKit
       }  // end for seg
     }  // end for ring
 
-    MeshPtr mesh = GetMesh();
+    MeshPtr mesh = GetMeshComponent()->Mesh();
     mesh->m_vertexCount = (uint)vertices.size();
     mesh->m_clientSideVertices = vertices;
     mesh->m_indexCount = (uint)indices.size();
@@ -501,13 +500,14 @@ namespace ToolKit
 
   Entity* Sphere::InstantiateTo(Entity* copyTo) const
   {
-    Drawable::InstantiateTo(copyTo);
+    Entity::InstantiateTo(copyTo);
     Sphere* instance = static_cast<Sphere*> (copyTo);
     return instance;
   }
 
   void Sphere::ParameterConstructor(float radius)
   {
+    AddComponent(new MeshComponent());
     Radius_Define(radius, "Geometry", 90, true, true);
   }
 
