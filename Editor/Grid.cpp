@@ -50,7 +50,7 @@ namespace ToolKit
       for (int i = 0; i < 4; i++)
       {
         Quad quad;
-        MeshPtr& mesh = quad.GetMesh();
+        MeshPtr& mesh = quad.GetMeshComponent()->Mesh();
         for (int j = 0; j < 4; j++)
         {
           mesh->m_clientSideVertices[j].pos = (mesh->m_clientSideVertices[j].pos * scale).xzy + offsets[i];
@@ -86,7 +86,7 @@ namespace ToolKit
         }
 
         Quad quad;
-        MeshPtr& mesh = quad.GetMesh();
+        MeshPtr& mesh = quad.GetMeshComponent()->Mesh();
         for (int j = 0; j < 4; j++)
         {
           mesh->m_clientSideVertices[j].pos = (mesh->m_clientSideVertices[j].pos * ls).xzy;

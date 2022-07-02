@@ -317,6 +317,7 @@ namespace ToolKit
 
   Quad::Quad(bool genDef)
   {
+    AddComponent(new MeshComponent());
     if (genDef)
     {
       Generate();
@@ -325,7 +326,7 @@ namespace ToolKit
 
   Entity* Quad::CopyTo(Entity* copyTo) const
   {
-    return Drawable::CopyTo(copyTo);
+    return Entity::CopyTo(copyTo);
   }
 
   EntityType Quad::GetType() const
@@ -335,7 +336,7 @@ namespace ToolKit
 
   Entity* Quad::InstantiateTo(Entity* copyTo) const
   {
-    Drawable::InstantiateTo(copyTo);
+    Entity::InstantiateTo(copyTo);
     Quad* instance = static_cast<Quad*> (copyTo);
     return instance;
   }
@@ -377,7 +378,7 @@ namespace ToolKit
     vertices[3].norm = Vec3(0.0f, 0.0f, 1.0f);
     vertices[3].btan = Vec3(0.0f, 1.0f, 0.0f);
 
-    MeshPtr mesh = GetMesh();
+    MeshPtr mesh = GetMeshComponent()->Mesh();
     mesh->m_vertexCount = (uint)vertices.size();
     mesh->m_clientSideVertices = vertices;
     mesh->m_indexCount = 6;

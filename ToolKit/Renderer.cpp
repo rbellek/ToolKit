@@ -460,11 +460,10 @@ namespace ToolKit
     material->Init();
 
     static Quad quad;
-    quad.GetMesh()->m_material = material;
+    quad.GetMeshComponent()->Mesh()->m_material = material;
 
-    static Camera dummy;
-
-    Render(&quad, &dummy);
+    static Camera quadCam;
+    Render(&quad, &quadCam);
   }
 
   void Renderer::FrustumCull(EntityRawPtrArray& entities, Camera* camera)

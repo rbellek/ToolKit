@@ -44,7 +44,7 @@ namespace ToolKit
 
       // Billboard
       Quad quad;
-      MeshPtr& meshPtr = quad.GetMesh();
+      MeshPtr& meshPtr = quad.GetMeshComponent()->Mesh();
 
       meshPtr->m_material = GetMaterialManager()->GetCopyOfUnlitMaterial();
       meshPtr->m_material->UnInit();
@@ -379,7 +379,7 @@ namespace ToolKit
       material->m_color = params.color;
       material->GetRenderState()->cullMode = CullingType::TwoSided;
 
-      MeshPtr& mesh = solid.GetMesh();
+      MeshPtr& mesh = solid.GetMeshComponent()->Mesh();
       mesh->m_material = material;
       m_mesh = mesh;
 

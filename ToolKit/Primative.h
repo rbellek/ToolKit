@@ -66,7 +66,7 @@ namespace ToolKit
     void Generate();
   };
 
-  class TK_API Quad final : public Drawable
+  class TK_API Quad final : public Entity
   {
    public:
     Quad(bool genDef = true);

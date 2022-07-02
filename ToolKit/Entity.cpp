@@ -134,7 +134,7 @@ namespace ToolKit
 
     Tag_Define
     (
-      "Tag",
+      "",
       EntityCategory.Name,
       EntityCategory.Priority,
       true, true
@@ -245,6 +245,16 @@ namespace ToolKit
 
     component->m_entity = this;
     m_components.push_back(ComponentPtr(component));
+  }
+
+  MeshComponentPtr Entity::GetMeshComponent()
+  {
+    return GetComponent<MeshComponent>();
+  }
+
+  MaterialComponentPtr Entity::GetMaterialComponent()
+  {
+    return GetComponent<MaterialComponent>();
   }
 
   void Entity::RemoveComponent(ULongID componentId)

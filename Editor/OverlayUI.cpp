@@ -245,13 +245,13 @@ namespace ToolKit
           if (ImGui::MenuItem("Plane"))
           {
             Quad* plane = new Quad();
-            plane->GetMesh()->Init(false);
+            plane->GetMeshComponent()->Init(false);
             currScene->AddEntity(plane);
           }
           if (ImGui::MenuItem("Cube"))
           {
             Cube* cube = new Cube();
-            cube->GetComponent<MeshComponent>()->Mesh()->Init(false);
+            cube->GetMeshComponent()->Init(false);
             currScene->AddEntity(cube);
           }
           if (ImGui::MenuItem("Sphere"))
@@ -263,7 +263,7 @@ namespace ToolKit
           if (ImGui::MenuItem("Cone"))
           {
             Cone* cone = new Cone({ 1.0f, 1.0f, 30, 30 });
-            cone->GetComponent<MeshComponent>()->Mesh()->Init(false);
+            cone->GetMeshComponent()->Init(false);
             currScene->AddEntity(cone);
           }
           if (ImGui::MenuItem("Monkey"))

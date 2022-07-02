@@ -88,7 +88,7 @@ namespace ToolKit
    public:
     ULongID m_id;  //!< Unique id of the component for the current runtime.
     ParameterBlock m_localData;  //!< Component local data.
-    Entity* m_entity = nullptr;
+    Entity* m_entity = nullptr;  //!< Parent Entity of the component.
   };
 
 }  // namespace ToolKit
