@@ -38,8 +38,7 @@ namespace ToolKit
 
     String path = GetFile();
     NormalizePath(path);
-
-    XmlFile sceneFile(path.c_str());
+    XmlFile sceneFile = GetFileManager()->GetXmlFile(path);
     XmlDocument sceneDoc;
     sceneDoc.parse<0>(sceneFile.data());
 

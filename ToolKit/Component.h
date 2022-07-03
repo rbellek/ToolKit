@@ -67,9 +67,10 @@ namespace ToolKit
      * appropriate cloning functionality that creates actual memory copy of
      * the component. It should not be an instance.
      * Base class take care of cloning ParameterBlock of the Component.
+     * @param ntt Parent Entity of the component.
      * @return Copy of the component.
      */
-    virtual ComponentPtr Copy();
+    virtual ComponentPtr Copy(Entity* ntt) = 0;
 
     /**
      * Serializes the Component's ParameterBlock to the xml document.

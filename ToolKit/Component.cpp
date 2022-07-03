@@ -20,15 +20,6 @@ namespace ToolKit
     return ComponentType::Base;
   }
 
-  ComponentPtr Component::Copy()
-  {
-    Component* cpy = Component::CreateByType(GetType());
-    cpy->m_localData = m_localData;
-    cpy->m_entity = m_entity;
-
-    return ComponentPtr(cpy);
-  }
-
   void Component::Serialize(XmlDocument* doc, XmlNode* parent) const
   {
     XmlNode* componentNode = CreateXmlNode(doc, XmlComponent, parent);

@@ -22,7 +22,7 @@ namespace ToolKit
     explicit DirectionComponent(Entity* entity);
     virtual ~DirectionComponent();
 
-    ComponentPtr Copy() override;
+    ComponentPtr Copy(Entity* ntt) override;
 
     // Directional functions
     Vec3 GetDirection();
