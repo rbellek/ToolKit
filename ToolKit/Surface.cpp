@@ -141,14 +141,14 @@ namespace ToolKit
 
   void Surface::ParameterEventConstructor()
   {
-    m_localData[Size_Index].m_onValueChangedFn = 
+    m_localData[Size_Index].m_onValueChangedFn =
       [this](Value& oldVal, Value& newVal) -> void
     {
       Size() = std::get<Vec2>(newVal);
       UpdateGeometry(false);
     };
 
-    m_localData[PivotOffset_Index].m_onValueChangedFn = 
+    m_localData[PivotOffset_Index].m_onValueChangedFn =
       [this](Value& oldVal, Value& newVal) -> void
     {
       PivotOffset() = std::get<Vec2>(newVal);

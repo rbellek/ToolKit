@@ -128,11 +128,11 @@ namespace ToolKit
         arrowMesh->m_material->GetRenderState()->depthTestEnabled = false;
         if (i == 0)
         {
-          GetComponent<MeshComponent>()->Mesh() = arrowMesh;
+          GetMeshComponent()->Mesh() = arrowMesh;
         }
         else
         {
-          GetComponent<MeshComponent>()->Mesh()->m_subMeshes.push_back(arrowMesh);
+          GetMeshComponent()->Mesh()->m_subMeshes.push_back(arrowMesh);
         }
       }
     }
@@ -798,8 +798,7 @@ namespace ToolKit
       m_gizmoLineBatches[0] = new LineBatch();
 
       MeshComponent* mc = new MeshComponent();
-      mc->Mesh() = 
-        m_gizmoLineBatches[0]->GetComponent<MeshComponent>()->Mesh();
+      mc->Mesh() = m_gizmoLineBatches[0]->GetMeshComponent()->Mesh();
       mc->Mesh()->m_material->Init();
       AddComponent(mc);
 
@@ -998,8 +997,7 @@ namespace ToolKit
       m_gizmoLineBatches[0] = new LineBatch();
 
       MeshComponent* mc = new MeshComponent();
-      mc->Mesh() = 
-        m_gizmoLineBatches[0]->GetComponent<MeshComponent>()->Mesh();
+      mc->Mesh() = m_gizmoLineBatches[0]->GetMeshComponent()->Mesh();
       mc->Mesh()->m_material->Init();
       AddComponent(mc);
     }

@@ -768,7 +768,7 @@ namespace ToolKit
     DrawType t,
     float lineWidth
   )
-  {    
+  {
     AddComponent(new MeshComponent());
     Generate(linePnts, color, t, lineWidth);
   }

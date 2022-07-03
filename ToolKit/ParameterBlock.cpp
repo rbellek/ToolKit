@@ -645,7 +645,7 @@ namespace ToolKit
           [&containsExposedVar](const VariantCategory& vc) -> bool
           {
             // remove if not contains exposed var.
-            return containsExposedVar.find(vc.Name) == 
+            return containsExposedVar.find(vc.Name) ==
               containsExposedVar.end();
           }
         ),

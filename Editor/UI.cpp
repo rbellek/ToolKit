@@ -1373,7 +1373,7 @@ namespace ToolKit
     {
       assert
       (
-        g_centeredTextOffset == 0.0f && 
+        g_centeredTextOffset == 0.0f &&
         "Begin / End CenteredTextButton mismatch !"
       );
 

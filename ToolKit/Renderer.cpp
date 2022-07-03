@@ -108,7 +108,7 @@ namespace ToolKit
   {
     MeshComponentPtrArray meshComponents;
     ntt->GetComponent<MeshComponent>(meshComponents);
-    
+
     MaterialPtr nttMat;
     if (MaterialComponentPtr matCom = ntt->GetComponent<MaterialComponent>())
     {

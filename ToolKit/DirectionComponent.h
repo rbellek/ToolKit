@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Component.h"
 
 namespace ToolKit
@@ -35,4 +37,4 @@ namespace ToolKit
     void LookAt(Vec3 target);
   };
 
-}
+}  //  namespace ToolKit

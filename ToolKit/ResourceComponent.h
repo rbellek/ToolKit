@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+
 #include "Component.h"
 
 namespace ToolKit
@@ -15,7 +18,7 @@ namespace ToolKit
 
   class TK_API MeshComponent : public Component
   {
-    public:
+   public:
     /**
     * Auto generated code for type information.
     */
@@ -51,7 +54,7 @@ namespace ToolKit
     */
     void Init(bool flushClientSideArray);
 
-    public:
+   public:
     TKDeclareParam(MeshPtr, Mesh);  //!< Component's Mesh resource.
   };
 
@@ -63,7 +66,7 @@ namespace ToolKit
   };
 
   class TK_API MaterialComponent : public Component
-  {   
+  {
    public:
     TKComponentType(MaterialComponent);
 
@@ -90,4 +93,4 @@ namespace ToolKit
     TKDeclareParam(MaterialPtr, Material);
   };
 
-}
+}  //  namespace ToolKit

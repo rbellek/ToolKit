@@ -42,12 +42,14 @@
   public: inline const Class& Name##C() const { \
     return m_localData[Name##_Index].GetCVar<Class>(); \
   } \
-  public: inline size_t Name##Index() { return Name##_Index; }
+  public: inline size_t Name##Index() { \
+    return Name##_Index; \
+  }
 
 namespace ToolKit
 {
 
-  typedef 
+  typedef
   std::variant
     <
     bool,

@@ -5,6 +5,7 @@
  * and related structures.
  */
 
+#include <vector>
 #include <memory>
 
 #include "ParameterBlock.h"

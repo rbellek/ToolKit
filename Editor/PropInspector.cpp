@@ -95,7 +95,10 @@ namespace ToolKit
             {
               if (GetResourceType(entry.m_ext) == ResourceType::Material)
               {
-                *var = GetMaterialManager()->Create<Material>(entry.GetFullPath());
+                *var = GetMaterialManager()->Create<Material>
+                (
+                  entry.GetFullPath()
+                );
               }
               else
               {
@@ -746,7 +749,15 @@ namespace ToolKit
       if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
       {
         Vec4 col = Vec4(entry->m_color, entry->m_alpha);
-        if (ImGui::ColorEdit4("Material Color##1", &col.x, ImGuiColorEditFlags_NoLabel))
+        if
+        (
+          ImGui::ColorEdit4
+          (
+            "Material Color##1",
+            &col.x,
+            ImGuiColorEditFlags_NoLabel
+          )
+        )
         {
           entry->m_color = col.xyz;
           entry->m_alpha = col.a;

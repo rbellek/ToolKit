@@ -891,8 +891,8 @@ namespace ToolKit
         EditorViewport2d* editorViewport =
           reinterpret_cast<EditorViewport2d*>(m_owner);
         ImGui::TableSetColumnIndex(5);
-        
-        if 
+
+        if
         (
           ImGui::ImageButton
           (
@@ -903,23 +903,23 @@ namespace ToolKit
         {
           editorViewport->m_zoomPercentage = 100;
         }
-        
+
         UI::HelpMarker
         (
           TKLoc + m_owner->m_name,
           "Reset Zoom"
         );
-        
+
         ImGui::TableSetColumnIndex(6);
         ImGui::Text("%u%%", uint32_t(editorViewport->m_zoomPercentage));
         ImGui::TableSetColumnIndex(7);
-        
+
         ImGui::Image
         (
           Convert2ImGuiTexture(UI::m_gridIcon),
           ImVec2(20, 20)
         );
-        
+
         UI::HelpMarker
         (
           TKLoc + m_owner->m_name,
@@ -932,14 +932,14 @@ namespace ToolKit
           EditorViewport2d* editorViewport =
             reinterpret_cast<EditorViewport2d*>(m_owner);
           static constexpr uint16_t cellSizeStep = 5, gridSizeStep = 0;
-          
+
           ImGui::InputScalar
           (
             "Cell Size",
             ImGuiDataType_U16, &editorViewport->m_gridCellSizeByPixel,
             &cellSizeStep
           );
-          
+
           ImGui::InputInt2
           (
             "Grid Size",
