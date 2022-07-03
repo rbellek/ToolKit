@@ -11,7 +11,9 @@ namespace ToolKit
 {
   Surface::Surface()
   {
+    ComponentConstructor();
     ParameterConstructor();
+    ParameterEventConstructor();
   }
 
   Surface::Surface(TexturePtr texture, const Vec2& pivotOffset)
@@ -67,6 +69,7 @@ namespace ToolKit
   void Surface::DeSerialize(XmlDocument* doc, XmlNode* parent)
   {
     Entity::DeSerialize(doc, parent);
+    ParameterEventConstructor();
     CreateQuat();
   }
 
@@ -83,12 +86,31 @@ namespace ToolKit
     mesh->Init();
   }
 
+  void Surface::ComponentConstructor()
+  {
+    MeshComponent* meshComponent = new MeshComponent();
+    meshComponent->m_localData[meshComponent->MeshIndex()].m_exposed = false;
+    AddComponent(meshComponent);
+
+    MaterialComponent* materialComponent = new MaterialComponent();
+    materialComponent->m_localData
+    [
+      materialComponent->MaterialIndex()
+    ].m_exposed = false;
+
+    MaterialPtr material = GetMaterialManager()->GetCopyOfUnlitMaterial();
+    material->UnInit();
+    material->GetRenderState()->blendFunction =
+      BlendFunction::SRC_ALPHA_ONE_MINUS_SRC_ALPHA;
+    material->GetRenderState()->depthTestEnabled = true;
+
+    materialComponent->Material() = material;
+
+    AddComponent(materialComponent);
+  }
+
   void Surface::ParameterConstructor()
   {
-    MeshComponent* mesh = new MeshComponent();
-    mesh->m_localData[mesh->MeshIndex()].m_exposed = false;
-    AddComponent(mesh);
-
     Size_Define
     (
       { 150.0f, 50.0f },
@@ -107,20 +129,38 @@ namespace ToolKit
       true
     );
 
-    MaterialPtr material = GetMaterialManager()->GetCopyOfUnlitMaterial();
-    material->UnInit();
-    material->GetRenderState()->blendFunction =
-      BlendFunction::SRC_ALPHA_ONE_MINUS_SRC_ALPHA;
-    material->GetRenderState()->depthTestEnabled = true;
-
     Material_Define
     (
-      material,
+      GetMaterialComponent()->Material(),
       SurfaceCategory.Name,
       SurfaceCategory.Priority,
       true,
       true
     );
+  }
+
+  void Surface::ParameterEventConstructor()
+  {
+    m_localData[Size_Index].m_onValueChangedFn = 
+      [this](Value& oldVal, Value& newVal) -> void
+    {
+      Size() = std::get<Vec2>(newVal);
+      UpdateGeometry(false);
+    };
+
+    m_localData[PivotOffset_Index].m_onValueChangedFn = 
+      [this](Value& oldVal, Value& newVal) -> void
+    {
+      PivotOffset() = std::get<Vec2>(newVal);
+      UpdateGeometry(false);
+    };
+
+    m_localData[Material_Index].m_onValueChangedFn =
+      [this](Value& oldVal, Value& newVal) -> void
+    {
+      GetMaterialComponent()->Material() = std::get<MaterialPtr>(newVal);
+      UpdateGeometry(true);
+    };
   }
 
   Entity* Surface::CopyTo(Entity* copyTo) const
@@ -254,10 +294,11 @@ namespace ToolKit
   void Surface::SetSizeFromTexture()
   {
     Size() =
-    {
+    Vec2
+    (
       Material()->m_diffuseTexture->m_width,
       Material()->m_diffuseTexture->m_height
-    };
+    );
   }
 
   // Button

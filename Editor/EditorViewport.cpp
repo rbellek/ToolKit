@@ -622,7 +622,7 @@ namespace ToolKit
       EditorScenePtr currScene = g_app->GetCurrentScene();
 
       // Asset drag and drop loading variables
-      static Drawable* boundingBox = nullptr;
+      static LineBatch* boundingBox = nullptr;
       static bool meshLoaded = false;
       static bool meshAddedToScene = false;
       static Drawable* dwMesh = nullptr;
@@ -642,7 +642,7 @@ namespace ToolKit
         if (dragEntry.m_ext == MESH)
         {
           // Load mesh
-          /*LoadDragMesh
+          LoadDragMesh
           (
             meshLoaded,
             dragEntry,
@@ -650,7 +650,7 @@ namespace ToolKit
             &dwMesh,
             &boundingBox,
             currScene
-          );*/
+          );
 
           // Show bounding box
           lastDragMeshPos = CalculateDragMeshPosition
@@ -791,13 +791,13 @@ namespace ToolKit
       }
     }
 
-    /*void EditorViewport::LoadDragMesh
+    void EditorViewport::LoadDragMesh
     (
       bool& meshLoaded,
       DirectoryEntry dragEntry,
       ImGuiIO io,
       Drawable** dwMesh,
-      Drawable** boundingBox,
+      LineBatch** boundingBox,
       EditorScenePtr currScene
     )
     {
@@ -828,14 +828,14 @@ namespace ToolKit
 
         meshLoaded = true;
       }
-    }*/
+    }
 
     Vec3 EditorViewport::CalculateDragMeshPosition
     (
       bool& meshLoaded,
       EditorScenePtr currScene,
       Drawable* dwMesh,
-      Drawable** boundingBox
+      LineBatch** boundingBox
     )
     {
       Vec3 lastDragMeshPos = Vec3(0.0f);
@@ -895,7 +895,7 @@ namespace ToolKit
       bool& meshAddedToScene,
       EditorScenePtr currScene,
       Drawable** dwMesh,
-      Drawable** boundingBox
+      LineBatch** boundingBox
     )
     {
       if (meshLoaded && !ImGui::IsMouseDragging(0))

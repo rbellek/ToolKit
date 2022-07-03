@@ -44,7 +44,11 @@ namespace ToolKit
         break;
         case ParameterVariant::VariantType::Vec2:
         {
-          ImGui::InputFloat2(var->m_name.c_str(), &var->GetVar<Vec2>()[0]);
+          Vec2 val = var->GetVar<Vec2>();
+          if (ImGui::InputFloat2(var->m_name.c_str(), &val[0]))
+          {
+            *var = val;
+          }
         }
         break;
         case ParameterVariant::VariantType::Vec3:
@@ -87,11 +91,11 @@ namespace ToolKit
             "Material##" + id,
             static_cast<uint> (UI::m_materialIcon->m_id),
             file,
-            [&mref](const DirectoryEntry& entry) -> void
+            [&var](const DirectoryEntry& entry) -> void
             {
               if (GetResourceType(entry.m_ext) == ResourceType::Material)
               {
-                mref = GetMaterialManager()->Create<Material>(entry.GetFullPath());
+                *var = GetMaterialManager()->Create<Material>(entry.GetFullPath());
               }
               else
               {
