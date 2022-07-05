@@ -622,6 +622,7 @@ namespace ToolKit
 
     void StateTransformTo::Rotate(Entity* ntt)
     {
+      EditorViewport* viewport = g_app->GetActiveViewport();
       PolarGizmo* pg = static_cast<PolarGizmo*> (m_gizmo);
       int axisInd = static_cast<int> (m_gizmo->GetGrabbedAxis());
       Vec3 projAxis = pg->m_handles[axisInd]->m_tangentDir;

@@ -225,7 +225,7 @@ namespace ToolKit
 
     // OverlayViewportOptions Common Functions
     //////////////////////////////////////////////////////////////////////////
-    
+
     void showAddMenu(void (*ShowAddMenuFn)(), uint32_t& nextItemIndex)
     {
       ImGui::TableSetColumnIndex(nextItemIndex++);
@@ -387,7 +387,11 @@ namespace ToolKit
       }
     }
 
-    void cameraAlignmentOptions(EditorViewport* m_owner, uint32_t& nextItemIndex)
+    void cameraAlignmentOptions
+    (
+      EditorViewport* m_owner,
+      uint32_t& nextItemIndex
+    )
     {
       ImGui::TableSetColumnIndex(nextItemIndex++);
       ImGui::Image
@@ -518,7 +522,7 @@ namespace ToolKit
       UI::HelpMarker(TKLoc + m_owner->m_name, "Camera Orientation\n");
     }
 
-    //2DView only
+    // 2DView only
     void show2DViewZoomOptions(EditorViewport* m_owner, uint32_t& nextItemIndex)
     {
       EditorViewport2d* editorViewport =
@@ -540,7 +544,7 @@ namespace ToolKit
       ImGui::Text("%u%%", uint32_t(editorViewport->m_zoomPercentage));
     }
 
-    //2DView only
+    // 2DView only
     void showGridOptions(EditorViewport* m_owner, uint32_t& nextItemIndex)
     {
       auto ShowGridOptionsFn = [m_owner]() -> void
@@ -603,25 +607,25 @@ namespace ToolKit
           if (ImGui::MenuItem("Plane"))
           {
             Quad* plane = new Quad();
-            plane->GetMesh()->Init(false);
+            plane->GetMeshComponent()->Mesh()->Init(false);
             currScene->AddEntity(plane);
           }
           if (ImGui::MenuItem("Cube"))
           {
             Cube* cube = new Cube();
-            cube->GetMesh()->Init(false);
+            cube->GetMeshComponent()->Mesh()->Init(false);
             currScene->AddEntity(cube);
           }
           if (ImGui::MenuItem("Sphere"))
           {
             Sphere* sphere = new Sphere();
-            sphere->GetMesh()->Init(false);
+            sphere->GetMeshComponent()->Mesh()->Init(false);
             currScene->AddEntity(sphere);
           }
           if (ImGui::MenuItem("Cone"))
           {
             Cone* cone = new Cone({ 1.0f, 1.0f, 30, 30 });
-            cone->GetMesh()->Init(false);
+            cone->GetMeshComponent()->Mesh()->Init(false);
             currScene->AddEntity(cone);
           }
           if (ImGui::MenuItem("Monkey"))
@@ -774,7 +778,7 @@ namespace ToolKit
       };
 
 
-        ImVec2 overlaySize(300, 34);
+      ImVec2 overlaySize(300, 34);
 
       // Center the toolbar.
       float width = ImGui::GetWindowContentRegionWidth();
@@ -805,20 +809,20 @@ namespace ToolKit
         );
         ImGui::TableNextRow();
 
-            uint32_t nextItemIndex = 0;
-            showAddMenu(ShowAddMenuFn, nextItemIndex);
+        uint32_t nextItemIndex = 0;
+        showAddMenu(ShowAddMenuFn, nextItemIndex);
 
-            showTransformOrientation(m_owner, nextItemIndex);
+        showTransformOrientation(m_owner, nextItemIndex);
 
-            autoSnapOptions(m_owner, nextItemIndex);
+        autoSnapOptions(m_owner, nextItemIndex);
 
-            show2DViewZoomOptions(m_owner, nextItemIndex);
+        show2DViewZoomOptions(m_owner, nextItemIndex);
 
-            showGridOptions(m_owner, nextItemIndex);
-            
-            ImGui::EndTable();
-        }
-        ImGui::EndChildFrame();
+        showGridOptions(m_owner, nextItemIndex);
+
+        ImGui::EndTable();
+      }
+      ImGui::EndChildFrame();
     }
 
     // StatusBar
