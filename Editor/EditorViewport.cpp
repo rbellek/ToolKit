@@ -30,7 +30,6 @@ namespace ToolKit
       nullptr,
       nullptr
     };
-    Vec3 EditorViewport::m_snapDeltas3DView = Vec3(0.25f, 45.0f, 0.25f);
 
     void InitOverlays(EditorViewport* viewport)
     {
@@ -60,6 +59,7 @@ namespace ToolKit
       DeSerialize(nullptr, node);
       ResetViewportImage(GetRenderTargetSettings());
       InitOverlays(this);
+      m_snapDeltas = Vec3(0.25f, 45.0f, 0.25f);
     }
 
     EditorViewport::EditorViewport(float width, float height)
@@ -67,6 +67,7 @@ namespace ToolKit
     {
       m_name = g_viewportStr + " " + std::to_string(m_id);
       InitOverlays(this);
+      m_snapDeltas = Vec3(0.25f, 45.0f, 0.25f);
     }
 
     EditorViewport::~EditorViewport()
@@ -99,9 +100,9 @@ namespace ToolKit
         DrawOverlays();
         if (m_mouseOverContentArea && g_app->m_snapsEnabled)
         {
-          g_app->m_moveDelta = m_snapDeltas3DView.x;
-          g_app->m_rotateDelta = m_snapDeltas3DView.y;
-          g_app->m_scaleDelta = m_snapDeltas3DView.z;
+          g_app->m_moveDelta = m_snapDeltas.x;
+          g_app->m_rotateDelta = m_snapDeltas.y;
+          g_app->m_scaleDelta = m_snapDeltas.z;
         }
       }
       ImGui::End();
