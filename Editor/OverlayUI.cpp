@@ -4,9 +4,9 @@
 #include "Mod.h"
 #include "ConsoleWindow.h"
 #include "EditorCamera.h"
-#include "DebugNew.h"
 #include "EditorLight.h"
 #include "EditorViewport2d.h"
+#include "DebugNew.h"
 
 namespace ToolKit
 {
@@ -737,74 +737,73 @@ namespace ToolKit
 
     void Overlay2DViewportOptions::Show()
     {
-        assert(m_owner);
-        if (m_owner == nullptr)
+      assert(m_owner);
+      if (m_owner == nullptr)
+      {
+        return;
+      }
+
+      auto ShowAddMenuFn = []() -> void
+      {
+        EditorScenePtr currScene = g_app->GetCurrentScene();
+
+        if (ImGui::MenuItem("Surface"))
         {
-            return;
+          Surface* suface = new Surface
+          (
+            Vec2(100.0f, 30.0f),
+            Vec2(0.0f, 0.0f)
+          );
+          suface->GetMeshComponent()->Init(false);
+          currScene->AddEntity(suface);
         }
 
-        auto ShowAddMenuFn = []() -> void
+        if (ImGui::MenuItem("Button"))
         {
-            EditorScenePtr currScene = g_app->GetCurrentScene();
+          Surface* suface = new Button(Vec2(100.0f, 30.0f));
+          suface->GetMeshComponent()->Init(false);
+          currScene->AddEntity(suface);
+        }
 
-            if (ImGui::MenuItem("Surface"))
-            {
-                Surface* suface = new Surface
-                (
-                    Vec2(100.0f, 30.0f),
-                    Vec2(0.0f, 0.0f)
-                );
-                suface->GetMesh()->Init(false);
-                currScene->AddEntity(suface);
-            }
-
-            if (ImGui::MenuItem("Button"))
-            {
-                Surface* suface = new Button(Vec2(100.0f, 30.0f));
-                suface->GetMesh()->Init(false);
-                currScene->AddEntity(suface);
-            }
-
-
-            ImGui::Separator();
-            if (ImGui::MenuItem("Node"))
-            {
-                Entity* node = Entity::CreateByType(EntityType::Entity_Node);
-                currScene->AddEntity(node);
-            }
-        };
+        ImGui::Separator();
+        if (ImGui::MenuItem("Node"))
+        {
+          Entity* node = Entity::CreateByType(EntityType::Entity_Node);
+          currScene->AddEntity(node);
+        }
+      };
 
 
         ImVec2 overlaySize(300, 34);
 
-        // Center the toolbar.
-        float width = ImGui::GetWindowContentRegionWidth();
-        float offset = (width - overlaySize.x) * 0.5f;
-        ImGui::SameLine(offset);
+      // Center the toolbar.
+      float width = ImGui::GetWindowContentRegionWidth();
+      float offset = (width - overlaySize.x) * 0.5f;
+      ImGui::SameLine(offset);
 
-        ImGui::SetNextWindowBgAlpha(0.65f);
-        if
-            (
-            ImGui::BeginChildFrame
-            (
-            ImGui::GetID("ViewportOptions"),
-            overlaySize,
-            ImGuiWindowFlags_NoMove
-            | ImGuiWindowFlags_NoTitleBar
-            | ImGuiWindowFlags_NoScrollbar
-            | ImGuiWindowFlags_NoScrollWithMouse
-            )
-            )
-        {
-            SetOwnerState();
+      ImGui::SetNextWindowBgAlpha(0.65f);
+      if
+      (
+        ImGui::BeginChildFrame
+        (
+          ImGui::GetID("ViewportOptions"),
+          overlaySize,
+          ImGuiWindowFlags_NoMove
+          | ImGuiWindowFlags_NoTitleBar
+          | ImGuiWindowFlags_NoScrollbar
+          | ImGuiWindowFlags_NoScrollWithMouse
+        )
+      )
+      {
+        SetOwnerState();
 
-            ImGui::BeginTable
-            (
-                "##SettingsBar",
-                8,
-                ImGuiTableFlags_SizingStretchProp
-            );
-            ImGui::TableNextRow();
+        ImGui::BeginTable
+        (
+          "##SettingsBar",
+          8,
+          ImGuiTableFlags_SizingStretchProp
+        );
+        ImGui::TableNextRow();
 
             uint32_t nextItemIndex = 0;
             showAddMenu(ShowAddMenuFn, nextItemIndex);
