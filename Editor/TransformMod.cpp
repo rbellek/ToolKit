@@ -10,7 +10,6 @@
 #include "Camera.h"
 #include "Util.h"
 #include "DebugNew.h"
-#include <utility>
 
 namespace ToolKit
 {
