@@ -32,7 +32,7 @@ namespace ToolKit
       return ConcatPaths({ m_rootPath, m_fileName + m_ext });
     }
 
-    ResourceManager* DirectoryEntry::GetManager() const
+    ResourceManagerPtr DirectoryEntry::GetManager() const
     {
       if (m_ext == ANIM)
       {
@@ -376,7 +376,7 @@ namespace ToolKit
               )
             )
             {
-              ResourceManager* rm = dirEnt.GetManager();
+              ResourceManagerPtr rm = dirEnt.GetManager();
               if (rm && rm->m_type == ResourceType::Material)
               {
                 MaterialInspector* mi = g_app->GetMaterialInspector();
@@ -795,7 +795,7 @@ namespace ToolKit
 
         if (ImGui::MenuItem("Rename"))
         {
-          if (ResourceManager* rm = entry->GetManager())
+          if (ResourceManagerPtr rm = entry->GetManager())
           {
             String oldName;
             String oldFile = entry->GetFullPath();
@@ -851,7 +851,7 @@ namespace ToolKit
           }
           else
           {
-            if (ResourceManager* rm = entry->GetManager())
+            if (ResourceManagerPtr rm = entry->GetManager())
             {
               rm->Remove(entry->GetFullPath());
             }
@@ -957,7 +957,7 @@ namespace ToolKit
             }
             else
             {
-              MaterialManager* man = GetMaterialManager();
+              MaterialManagerPtr man = GetMaterialManager();
               MaterialPtr mat = man->GetCopyOfSolidMaterial();
               mat->m_name = val;
               mat->SetFile(file);

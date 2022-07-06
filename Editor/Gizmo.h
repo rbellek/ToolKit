@@ -156,7 +156,7 @@ namespace ToolKit
       virtual ~PolarGizmo();
 
       void Update(float deltaTime) override;
-      void Render(Renderer* renderer, Camera* cam);
+      void Render(RendererPtr renderer, Camera* cam);
     };
 
     class SpotLightGizmo : public Entity

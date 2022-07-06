@@ -38,7 +38,7 @@ namespace ToolKit
     // routines will search the in the scene.
     // Make sure this is the very first thing before accessing viewport
     // cameras.
-    if (SceneManager* sceneMngr = GetSceneManager())
+    if (SceneManagerPtr sceneMngr = GetSceneManager())
     {
       ScenePtr currScene = sceneMngr->GetCurrentScene();
       currScene->AddEntity(cam);
@@ -47,7 +47,7 @@ namespace ToolKit
     UpdateSurfaces(vp);
     vp->AttachCamera(m_lastCamEntity->Id());
 
-    if (SceneManager* sceneMngr = GetSceneManager())
+    if (SceneManagerPtr sceneMngr = GetSceneManager())
     {
       ScenePtr currScene = sceneMngr->GetCurrentScene();
       currScene->RemoveEntity(m_cam->Id());

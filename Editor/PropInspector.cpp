@@ -149,7 +149,7 @@ namespace ToolKit
 
         if (ImGui::Button("Reload"))
         {
-          if (ResourceManager* man = dirEnt.GetManager())
+          if (ResourceManagerPtr man = dirEnt.GetManager())
           {
             if (man->Exist(file))
             {

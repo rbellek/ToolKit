@@ -180,7 +180,7 @@ namespace ToolKit
       float m_rotateDelta = 15.0f;
       float m_scaleDelta = 0.5f;
 
-      Renderer* m_renderer;
+      RendererPtr m_renderer;
 
      private:
       // Internal states.

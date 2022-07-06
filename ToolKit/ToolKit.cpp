@@ -23,22 +23,22 @@ namespace ToolKit
 
   Main::Main()
   {
-    m_logger = new Logger();
+    m_logger = std::make_shared<Logger>();
 
-    m_renderer = new Renderer();
-    m_pluginManager = new PluginManager();
-    m_animationMan = new AnimationManager();
-    m_animationPlayer = new AnimationPlayer();
-    m_textureMan = new TextureManager();
-    m_meshMan = new MeshManager();
-    m_spriteSheetMan = new SpriteSheetManager();
-    m_audioMan = new AudioManager();
-    m_shaderMan = new ShaderManager();
-    m_materialManager = new MaterialManager();
-    m_sceneManager = new SceneManager();
-    m_uiManager = new UIManager();
-    m_skeletonManager = new SkeletonManager();
-    m_fileManager = new FileManager();
+    m_renderer = std::make_shared<Renderer>();
+    m_pluginManager = std::make_shared<PluginManager>();
+    m_animationMan = std::make_shared<AnimationManager>();
+    m_animationPlayer = std::make_shared<AnimationPlayer>();
+    m_textureMan = std::make_shared<TextureManager>();
+    m_meshMan = std::make_shared<MeshManager>();
+    m_spriteSheetMan = std::make_shared<SpriteSheetManager>();
+    m_audioMan = std::make_shared<AudioManager>();
+    m_shaderMan = std::make_shared<ShaderManager>();
+    m_materialManager = std::make_shared<MaterialManager>();
+    m_sceneManager = std::make_shared<SceneManager>();
+    m_uiManager = std::make_shared<UIManager>();
+    m_skeletonManager = std::make_shared<SkeletonManager>();
+    m_fileManager = std::make_shared<FileManager>();
 
     m_logger->Log("Main Constructed");
   }
@@ -46,24 +46,7 @@ namespace ToolKit
   Main::~Main()
   {
     assert(m_initiated == false && "Uninitiate before deconstruct");
-
-    SafeDel(m_renderer);
-    SafeDel(m_pluginManager);
-    SafeDel(m_animationMan);
-    SafeDel(m_animationPlayer);
-    SafeDel(m_textureMan);
-    SafeDel(m_meshMan);
-    SafeDel(m_spriteSheetMan);
-    SafeDel(m_audioMan);
-    SafeDel(m_shaderMan);
-    SafeDel(m_materialManager);
-    SafeDel(m_sceneManager);
-    SafeDel(m_uiManager);
-    SafeDel(m_skeletonManager);
-    SafeDel(m_fileManager);
-
     m_logger->Log("Main Deconstructed");
-    SafeDel(m_logger);
   }
 
   void Main::Init()
@@ -124,67 +107,67 @@ namespace ToolKit
     }
   }
 
-  Logger* GetLogger()
+  LoggerPtr GetLogger()
   {
     return Main::GetInstance()->m_logger;
   }
 
-  Renderer* GetRenderer()
+  RendererPtr GetRenderer()
   {
     return Main::GetInstance()->m_renderer;
   }
 
-  AnimationManager* GetAnimationManager()
+  AnimationManagerPtr GetAnimationManager()
   {
     return Main::GetInstance()->m_animationMan;
   }
 
-  AnimationPlayer* GetAnimationPlayer()
+  AnimationPlayerPtr GetAnimationPlayer()
   {
     return Main::GetInstance()->m_animationPlayer;
   }
 
-  AudioManager* GetAudioManager()
+  AudioManagerPtr GetAudioManager()
   {
     return Main::GetInstance()->m_audioMan;
   }
 
-  MaterialManager* GetMaterialManager()
+  MaterialManagerPtr GetMaterialManager()
   {
     return Main::GetInstance()->m_materialManager;
   }
 
-  MeshManager* GetMeshManager()
+  MeshManagerPtr GetMeshManager()
   {
     return Main::GetInstance()->m_meshMan;
   }
 
-  ShaderManager* GetShaderManager()
+  ShaderManagerPtr GetShaderManager()
   {
     return Main::GetInstance()->m_shaderMan;
   }
 
-  SpriteSheetManager* GetSpriteSheetManager()
+  SpriteSheetManagerPtr GetSpriteSheetManager()
   {
     return Main::GetInstance()->m_spriteSheetMan;
   }
 
-  TextureManager* GetTextureManager()
+  TextureManagerPtr GetTextureManager()
   {
     return Main::GetInstance()->m_textureMan;
   }
 
-  SceneManager* GetSceneManager()
+  SceneManagerPtr GetSceneManager()
   {
     return Main::GetInstance()->m_sceneManager;
   }
 
-  PluginManager* GetPluginManager()
+  PluginManagerPtr GetPluginManager()
   {
     return Main::GetInstance()->m_pluginManager;
   }
 
-  ResourceManager* GetResourceManager(ResourceType type)
+  ResourceManagerPtr GetResourceManager(ResourceType type)
   {
     switch (type)
     {
@@ -216,7 +199,7 @@ namespace ToolKit
     return nullptr;
   }
 
-  UIManager* GetUIManager()
+  UIManagerPtr GetUIManager()
   {
     return Main::GetInstance()->m_uiManager;
   }
@@ -226,12 +209,12 @@ namespace ToolKit
     return &Main::GetInstance()->m_handleManager;
   }
 
-  TK_API SkeletonManager* GetSkeletonManager()
+  TK_API SkeletonManagerPtr GetSkeletonManager()
   {
     return Main::GetInstance()->m_skeletonManager;
   }
 
-  TK_API FileManager* GetFileManager()
+  TK_API FileManagerPtr GetFileManager()
   {
     return Main::GetInstance()->m_fileManager;
   }

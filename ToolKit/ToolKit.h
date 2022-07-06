@@ -77,22 +77,22 @@ namespace ToolKit
     static void SetProxy(Main* proxy);
 
    public:
-    AnimationManager* m_animationMan = nullptr;
-    AnimationPlayer* m_animationPlayer = nullptr;
-    AudioManager* m_audioMan = nullptr;
-    MaterialManager* m_materialManager = nullptr;
-    MeshManager* m_meshMan = nullptr;
-    ShaderManager* m_shaderMan = nullptr;
-    SpriteSheetManager* m_spriteSheetMan = nullptr;
-    TextureManager* m_textureMan = nullptr;
-    SceneManager* m_sceneManager = nullptr;
-    PluginManager* m_pluginManager = nullptr;
-    Renderer* m_renderer = nullptr;
-    Logger* m_logger = nullptr;
-    UIManager* m_uiManager = nullptr;
-    SkeletonManager* m_skeletonManager = nullptr;
+    AnimationManagerPtr m_animationMan;
+    AnimationPlayerPtr m_animationPlayer;
+    AudioManagerPtr m_audioMan;
+    MaterialManagerPtr m_materialManager;
+    MeshManagerPtr m_meshMan;
+    ShaderManagerPtr m_shaderMan;
+    SpriteSheetManagerPtr m_spriteSheetMan;
+    TextureManagerPtr m_textureMan;
+    SceneManagerPtr m_sceneManager;
+    PluginManagerPtr m_pluginManager;
+    RendererPtr m_renderer;
+    LoggerPtr m_logger;
+    UIManagerPtr m_uiManager;
+    SkeletonManagerPtr m_skeletonManager;
     HandleManager m_handleManager;
-    FileManager* m_fileManager = nullptr;
+    FileManagerPtr m_fileManager;
 
     bool m_initiated = false;
     String m_resourceRoot;
@@ -103,23 +103,23 @@ namespace ToolKit
   };
 
   // Accessors.
-  TK_API Logger* GetLogger();
-  TK_API Renderer* GetRenderer();
-  TK_API AnimationManager* GetAnimationManager();
-  TK_API AnimationPlayer* GetAnimationPlayer();
-  TK_API AudioManager* GetAudioManager();
-  TK_API MaterialManager* GetMaterialManager();
-  TK_API MeshManager* GetMeshManager();
-  TK_API ShaderManager* GetShaderManager();
-  TK_API SpriteSheetManager* GetSpriteSheetManager();
-  TK_API TextureManager* GetTextureManager();
-  TK_API SceneManager* GetSceneManager();
-  TK_API PluginManager* GetPluginManager();
-  TK_API ResourceManager* GetResourceManager(ResourceType type);
-  TK_API UIManager* GetUIManager();
+  TK_API LoggerPtr GetLogger();
+  TK_API RendererPtr GetRenderer();
+  TK_API AnimationManagerPtr GetAnimationManager();
+  TK_API AnimationPlayerPtr GetAnimationPlayer();
+  TK_API AudioManagerPtr GetAudioManager();
+  TK_API MaterialManagerPtr GetMaterialManager();
+  TK_API MeshManagerPtr GetMeshManager();
+  TK_API ShaderManagerPtr GetShaderManager();
+  TK_API SpriteSheetManagerPtr GetSpriteSheetManager();
+  TK_API TextureManagerPtr GetTextureManager();
+  TK_API SceneManagerPtr GetSceneManager();
+  TK_API PluginManagerPtr GetPluginManager();
+  TK_API ResourceManagerPtr GetResourceManager(ResourceType type);
+  TK_API UIManagerPtr GetUIManager();
   TK_API HandleManager* GetHandleManager();
-  TK_API SkeletonManager* GetSkeletonManager();
-  TK_API FileManager* GetFileManager();
+  TK_API SkeletonManagerPtr GetSkeletonManager();
+  TK_API FileManagerPtr GetFileManager();
 
   TK_API String DefaultPath();
   TK_API String DefaultAbsolutePath();

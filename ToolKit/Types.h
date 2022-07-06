@@ -114,6 +114,40 @@ namespace ToolKit
   typedef std::shared_ptr<XmlFile> XmlFilePtr;
   typedef std::vector<class UILayer*> UILayerPtrArray;
 
+  // Smart pointers
+  class AnimationManager;
+  class AnimationPlayer;
+  class AudioManager;
+  class MaterialManager;
+  class MeshManager;
+  class ShaderManager;
+  class SpriteSheetManager;
+  class TextureManager;
+  class SceneManager;
+  class PluginManager;
+  class Renderer;
+  class Logger;
+  class UIManager;
+  class SkeletonManager;
+  class FileManager;
+  class ResourceManager;
+  typedef std::shared_ptr<ResourceManager> ResourceManagerPtr;
+  typedef std::shared_ptr<AnimationManager> AnimationManagerPtr;
+  typedef std::shared_ptr<AnimationPlayer> AnimationPlayerPtr;
+  typedef std::shared_ptr<AudioManager> AudioManagerPtr;
+  typedef std::shared_ptr<MaterialManager> MaterialManagerPtr;
+  typedef std::shared_ptr<MeshManager> MeshManagerPtr;
+  typedef std::shared_ptr<ShaderManager> ShaderManagerPtr;
+  typedef std::shared_ptr<SpriteSheetManager> SpriteSheetManagerPtr;
+  typedef std::shared_ptr<TextureManager> TextureManagerPtr;
+  typedef std::shared_ptr<SceneManager> SceneManagerPtr;
+  typedef std::shared_ptr<PluginManager> PluginManagerPtr;
+  typedef std::shared_ptr<Renderer> RendererPtr;
+  typedef std::shared_ptr<Logger> LoggerPtr;
+  typedef std::shared_ptr<UIManager> UIManagerPtr;
+  typedef std::shared_ptr<SkeletonManager> SkeletonManagerPtr;
+  typedef std::shared_ptr<FileManager> FileManagerPtr;
+
   struct XmlDocBundle
   {
     XmlDocumentPtr doc;

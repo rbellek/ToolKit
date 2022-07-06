@@ -163,8 +163,7 @@ namespace ToolKit
             g_proxy = new Main();
 
             // Override SceneManager.
-            SafeDel(g_proxy->m_sceneManager);
-            g_proxy->m_sceneManager = new EditorSceneManager();
+            g_proxy->m_sceneManager = std::make_shared<EditorSceneManager>();
 
             Main::SetProxy(g_proxy);
             Main::GetInstance()->Init();

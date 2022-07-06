@@ -9,7 +9,7 @@
 namespace ToolKit
 {
 
-  extern TK_API ResourceManager* GetResourceManager(ResourceType type);
+  extern TK_API ResourceManagerPtr GetResourceManager(ResourceType type);
 
 #define TKResouceType(type) \
   static ResourceType GetTypeStatic() { return ResourceType::type; } \
@@ -32,7 +32,7 @@ namespace ToolKit
     {
       std::shared_ptr<T> resource = std::make_shared<T>();
       CopyTo(resource.get());
-      if (ResourceManager* manager = GetResourceManager(T::GetTypeStatic()))
+      if (ResourceManagerPtr manager = GetResourceManager(T::GetTypeStatic()))
       {
         manager->Manage(resource);
       }

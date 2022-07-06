@@ -758,7 +758,7 @@ namespace ToolKit
       SetMesh(mesh);
     }
 
-    void PolarGizmo::Render(Renderer* renderer, Camera* cam)
+    void PolarGizmo::Render(RendererPtr renderer, Camera* cam)
     {
       // Draw an inverted sphere to mask back side.
       static std::shared_ptr<Sphere> sphere = nullptr;
