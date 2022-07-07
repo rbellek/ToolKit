@@ -115,38 +115,22 @@ namespace ToolKit
   typedef std::vector<class UILayer*> UILayerPtrArray;
 
   // Smart pointers
-  class AnimationManager;
-  class AnimationPlayer;
-  class AudioManager;
-  class MaterialManager;
-  class MeshManager;
-  class ShaderManager;
-  class SpriteSheetManager;
-  class TextureManager;
-  class SceneManager;
-  class PluginManager;
-  class Renderer;
-  class Logger;
-  class UIManager;
-  class SkeletonManager;
-  class FileManager;
-  class ResourceManager;
-  typedef std::shared_ptr<ResourceManager> ResourceManagerPtr;
-  typedef std::shared_ptr<AnimationManager> AnimationManagerPtr;
-  typedef std::shared_ptr<AnimationPlayer> AnimationPlayerPtr;
-  typedef std::shared_ptr<AudioManager> AudioManagerPtr;
-  typedef std::shared_ptr<MaterialManager> MaterialManagerPtr;
-  typedef std::shared_ptr<MeshManager> MeshManagerPtr;
-  typedef std::shared_ptr<ShaderManager> ShaderManagerPtr;
-  typedef std::shared_ptr<SpriteSheetManager> SpriteSheetManagerPtr;
-  typedef std::shared_ptr<TextureManager> TextureManagerPtr;
-  typedef std::shared_ptr<SceneManager> SceneManagerPtr;
-  typedef std::shared_ptr<PluginManager> PluginManagerPtr;
-  typedef std::shared_ptr<Renderer> RendererPtr;
-  typedef std::shared_ptr<Logger> LoggerPtr;
-  typedef std::shared_ptr<UIManager> UIManagerPtr;
-  typedef std::shared_ptr<SkeletonManager> SkeletonManagerPtr;
-  typedef std::shared_ptr<FileManager> FileManagerPtr;
+  typedef std::shared_ptr<class ResourceManager> ResourceManagerPtr;
+  typedef std::shared_ptr<class AnimationManager> AnimationManagerPtr;
+  typedef std::shared_ptr<class AnimationPlayer> AnimationPlayerPtr;
+  typedef std::shared_ptr<class AudioManager> AudioManagerPtr;
+  typedef std::shared_ptr<class MaterialManager> MaterialManagerPtr;
+  typedef std::shared_ptr<class MeshManager> MeshManagerPtr;
+  typedef std::shared_ptr<class ShaderManager> ShaderManagerPtr;
+  typedef std::shared_ptr<class SpriteSheetManager> SpriteSheetManagerPtr;
+  typedef std::shared_ptr<class TextureManager> TextureManagerPtr;
+  typedef std::shared_ptr<class SceneManager> SceneManagerPtr;
+  typedef std::shared_ptr<class PluginManager> PluginManagerPtr;
+  typedef std::shared_ptr<class Renderer> RendererPtr;
+  typedef std::shared_ptr<class Logger> LoggerPtr;
+  typedef std::shared_ptr<class UIManager> UIManagerPtr;
+  typedef std::shared_ptr<class SkeletonManager> SkeletonManagerPtr;
+  typedef std::shared_ptr<class FileManager> FileManagerPtr;
 
   struct XmlDocBundle
   {
